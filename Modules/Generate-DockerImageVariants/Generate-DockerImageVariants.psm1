@@ -71,7 +71,7 @@ function Generate-DockerImageVariants {
 
     $ErrorActionPreference = 'Stop'
 
-    cd $GENERATE_BASE_DIR
+    Push-Location $GENERATE_BASE_DIR
 
     # Get variants' definition
     $VARIANTS = . ( Join-Path $GENERATE_DEFINITIONS_DIR "VARIANTS.ps1" )
@@ -173,6 +173,8 @@ function Generate-DockerImageVariants {
         # Generate README.md
         Get-ContentFromTemplate -Path (Join-Path $GENERATE_TEMPLATES_DIR "$_.ps1") | Out-File (Join-Path $PROJECT_BASE_DIR $_) -Encoding utf8 -NoNewline
     }
+
+    Pop-Location
 }
 
 Export-ModuleMember -Function 'Generate-DockerImageVariants'
