@@ -63,7 +63,7 @@ $VARIANT = @{
 }
 ```
 
-Also, the `$PASS_VARIABLES` hashtable in available in each template-pass (i.e. the processing of a template). Based on the above template definition for `Dockerfile`, the `$PASS_VARIABLE object for the first template-pass is:
+Also, the `$PASS_VARIABLES` hashtable in available in each template-pass (i.e. the processing of a template). Based on the above template definition for `Dockerfile`, the `$PASS_VARIABLE` object for the first template-pass is:
 
 ```powershell
 @{
@@ -75,10 +75,13 @@ To access the `maintainer` variable, simply use `$PASS_VARIABLES['maintainer']`.
 
 ## Template file definitions
 
-`common` -  Specifies whether this file is shared by all distros ( If yes, has to be present in `./templates`. If not, has to be present in `./templates/<file>/<distro>/` if there's a variant distro defined, or else has to be present in `./templates/<file>/` )
-`includeHeader` - Specifies to include file called `<file>.header.ps1`. Location determined by `common`
-`includeFooter` - Specifies to include file called `<file>.footer.ps1`. Location determined by `common`
-`passes` - An array of passes that the template will go through. Each pass will generate a single file.
+- `common` -  Specifies whether this file is shared by all distros ( If yes, has to be present in `./templates`. If not, has to be present in `./templates/<file>/<distro>/` if there's a variant distro defined, or else has to be present in `./templates/<file>/` )
+
+- `includeHeader` - Specifies to include file called `<file>.header.ps1`. Location determined by `common`
+
+- `includeFooter` - Specifies to include file called `<file>.footer.ps1`. Location determined by `common`
+
+- `passes` - An array of passes that the template will go through. Each pass will generate a single file.
 
 ### Template-pass configuration
 
