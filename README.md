@@ -1,6 +1,6 @@
 # Generate-DockerImageVariants
 
-Easily generate Docker image variants' build context files.
+A Powershell Module to easily generate Docker image variants' build context files
 
 ## How to use
 
@@ -15,8 +15,8 @@ Easily generate Docker image variants' build context files.
 ## Required files / folders
 
 `definitions` - the folder contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
-   -  `VARIANTS.ps1` - a generation definition file containing definitions of the image variants, and the template of each file to be included in the image build context.
-   - `FILES.ps1` -  a generation definition file containing definitions of the project files you want to generate.
+   -  `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and defintions of the template of each file to be included in the image build context.
+   - `FILES.ps1` - a generation definition file containing definitions of the project files you want to generate.
 
 `templates` - the folder where you store your templates used for generating files according to your generation definitions
 
@@ -24,7 +24,7 @@ Easily generate Docker image variants' build context files.
 
 `$VARIANT` object will contain these properties. The useful properties are the variant metadata:
 
-```
+```powershell
 $VARIANT = @{
     # Variant Metadata
     tag = 'sometag'
@@ -65,7 +65,7 @@ $VARIANT = @{
 
 Also, the `$PASS_VARIABLES` hashtable in available in each template-pass (i.e. the processing of a template). Based on the above template definition for `Dockerfile`, the `$PASS_VARIABLE object for the first template-pass is:
 
-```
+```powershell
 @{
     maintainer = 'foo'
 }
@@ -84,7 +84,7 @@ To access the `maintainer` variable, simply use `$PASS_VARIABLES['maintainer']`.
 
 Each pass processes a `<file>.ps1` template and generates a single file.  Configuration for that pass is specified by properties.
 
-```
+```powershell
 @{
     variables = @{
         'foo' = 'bar'
@@ -94,4 +94,3 @@ Each pass processes a `<file>.ps1` template and generates a single file.  Config
 ```
 
 During each pass, a hashtable called `$PASS_VARIABLES` will contain the above-defined variables. For instance, the value of `$PASS_VARIABLES['foo']` will be `bar`. The final generated file will be called `Dockerfile.dev`.
-
