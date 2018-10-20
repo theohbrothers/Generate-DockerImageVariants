@@ -1,0 +1,286 @@
+image: docker:latest
+services:
+  - docker:dind
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - build
+
+
+build-perl:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "perl"
+    VARIANT_TAG_WITH_VERSION: "perl-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/perl"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+ 
+build-python:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "python"
+    VARIANT_TAG_WITH_VERSION: "python-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/python"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+ 
+build-git:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "git"
+    VARIANT_TAG_WITH_VERSION: "git-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/git"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+ 
+build-perl-git:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "perl-git"
+    VARIANT_TAG_WITH_VERSION: "perl-git-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/perl-git"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+ 
+build-python-git:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "python-git"
+    VARIANT_TAG_WITH_VERSION: "python-git-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/python-git"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+ 
+build-perl-python-git:
+  stage: build
+  only:
+    - master
+    - api
+  variables:
+    VARIANT_TAG: "perl-python-git"
+    VARIANT_TAG_WITH_VERSION: "perl-python-git-v1.0.0"
+    VARIANT_BUILD_DIR: "./variants/alpine/perl-python-git"
+  before_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Login to Docker Hub registry
+    - echo "${DOCKERHUB_REGISTRY_PASSWORD}" | docker login -u "${DOCKERHUB_REGISTRY_USER}" --password-stdin
+
+    # Login to GitLab registry
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u "${CI_REGISTRY_USER}" --password-stdin "${CI_REGISTRY}"
+
+  script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+    - docker build
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+      -t "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+      -t "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+      "${VARIANT_BUILD_DIR}"
+
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Push to Docker Hub registry. E.g. 'namespace/my-project:tag'
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG}"
+    - docker push "${DOCKERHUB_REGISTRY_USER}/${CI_PROJECT_NAME}:${VARIANT_TAG_WITH_VERSION}"
+
+    # Push to GitLab registry. E.g. 'registry.gitlab.com/namespace/my-project:tag
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG}"
+    - docker push "${CI_REGISTRY_IMAGE}:${VARIANT_TAG_WITH_VERSION}"
+
+  after_script:
+    - date '+%Y-%m-%d %H:%M:%S %z'
+
+    # Log out of Docker Hub registry
+    - docker logout
+
+    # Log out of GitLab registry
+    - docker logout "${CI_REGISTRY}"
+

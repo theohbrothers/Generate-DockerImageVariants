@@ -1,0 +1,3 @@
+@"
+COPY app /app
+"@
