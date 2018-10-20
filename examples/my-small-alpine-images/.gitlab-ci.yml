@@ -16,7 +16,7 @@ build-curl:
   variables:
     VARIANT_TAG: "curl"
     VARIANT_TAG_WITH_VERSION: "curl-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/curl"
+    VARIANT_BUILD_DIR: "variants/alpine/curl"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
