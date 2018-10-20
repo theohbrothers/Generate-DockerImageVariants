@@ -97,9 +97,9 @@ function Generate-DockerImageVariants {
                                                 $VARIANT['tag']
                                         }
         $VARIANT['build_dir_rel'] = if ( $VARIANT['distro'] ) {
-                                    "./variants/$( $VARIANT['distro'] )/$( $VARIANT['tag_without_distro'] )"
+                                    "variants/$( $VARIANT['distro'] )/$( $VARIANT['tag_without_distro'] )"
                                 }else {
-                                        "./variants/$($VARIANT['tag'])"
+                                    "variants/$($VARIANT['tag'])"
                                 }
         $VARIANT['build_dir'] = Join-Path "$PROJECT_BASE_DIR" $VARIANT['build_dir_rel']
     }

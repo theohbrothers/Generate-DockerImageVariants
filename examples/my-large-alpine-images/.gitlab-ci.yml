@@ -16,7 +16,7 @@ build-perl:
   variables:
     VARIANT_TAG: "perl"
     VARIANT_TAG_WITH_VERSION: "perl-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/perl"
+    VARIANT_BUILD_DIR: "variants/alpine/perl"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
@@ -62,7 +62,7 @@ build-python:
   variables:
     VARIANT_TAG: "python"
     VARIANT_TAG_WITH_VERSION: "python-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/python"
+    VARIANT_BUILD_DIR: "variants/alpine/python"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
@@ -108,7 +108,7 @@ build-git:
   variables:
     VARIANT_TAG: "git"
     VARIANT_TAG_WITH_VERSION: "git-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/git"
+    VARIANT_BUILD_DIR: "variants/alpine/git"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
@@ -154,7 +154,7 @@ build-perl-git:
   variables:
     VARIANT_TAG: "perl-git"
     VARIANT_TAG_WITH_VERSION: "perl-git-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/perl-git"
+    VARIANT_BUILD_DIR: "variants/alpine/perl-git"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
@@ -200,7 +200,7 @@ build-python-git:
   variables:
     VARIANT_TAG: "python-git"
     VARIANT_TAG_WITH_VERSION: "python-git-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/python-git"
+    VARIANT_BUILD_DIR: "variants/alpine/python-git"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
@@ -246,7 +246,7 @@ build-perl-python-git:
   variables:
     VARIANT_TAG: "perl-python-git"
     VARIANT_TAG_WITH_VERSION: "perl-python-git-v1.0.0"
-    VARIANT_BUILD_DIR: "./variants/alpine/perl-python-git"
+    VARIANT_BUILD_DIR: "variants/alpine/perl-python-git"
   before_script:
     - date '+%Y-%m-%d %H:%M:%S %z'
 
