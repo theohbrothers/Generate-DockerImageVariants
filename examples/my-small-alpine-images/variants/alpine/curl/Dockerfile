@@ -1,8 +1,8 @@
-FROM nginx:1.14-alpine
+FROM alpine:3.8
 
 # Install curl
 RUN apk update \
     && apk add --no-cache curl \
     && rm -rf /var/cache/apk/*
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["cron", "-f"]

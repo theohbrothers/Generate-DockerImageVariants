@@ -1,3 +1,3 @@
 @"
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["cron", "-f"]
 "@

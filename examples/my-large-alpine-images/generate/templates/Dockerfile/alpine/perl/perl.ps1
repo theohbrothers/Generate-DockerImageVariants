@@ -1,5 +1,5 @@
 @'
-# Install curl
+# Install perl
 RUN apk update \
     && apk add --no-cache \
         perl \

@@ -1,3 +1,3 @@
 @"
-FROM nginx:1.14-alpine
+FROM alpine:3.8
 "@

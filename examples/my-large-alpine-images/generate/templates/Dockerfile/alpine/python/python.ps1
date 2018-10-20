@@ -1,5 +1,5 @@
 @'
-# Install curl
+# Install python
 RUN apk update \
     && apk add --no-cache \
         python \

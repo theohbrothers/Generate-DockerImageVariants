@@ -24,7 +24,7 @@ It may also be used to generate other repository files.
 
 ## Variables available during generation of image build context files and repository files
 
-`$VARIANT` object will contain these properties. The useful properties are the variant metadata:
+`$VARIANT` object will contain these properties. The useful properties are the image variant metadata:
 
 ```powershell
 $VARIANT = @{
@@ -75,7 +75,7 @@ Also, the `$PASS_VARIABLES` hashtable in available in each template-pass (i.e. t
 
 To access the `maintainer` variable, simply use `$PASS_VARIABLES['maintainer']`.
 
-Note: The `$PASS_VARIABLES` hashtable is only available during build-context files generation, and not for repository files generation
+Note: The `$PASS_VARIABLES` hashtable is only available during build-context files generation, and not for repository files generation.
 
 ## Template file definitions
 
