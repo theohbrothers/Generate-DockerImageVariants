@@ -17,7 +17,7 @@ It may also be used to generate other repository files.
 ## Prerequisite files / folders
 
 `definitions` - the folder contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
-   -  `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and defintions of the template of each file to be included in the image build context.
+   - `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and defintions of the template of each file to be included in the image build context.
    - `FILES.ps1` - a generation definition file containing definitions of the project files you want to generate.
 
 `templates` - the folder where you store your templates used for generating files according to your generation definitions
@@ -29,11 +29,13 @@ It may also be used to generate other repository files.
 ```powershell
 $VARIANT = @{
     # Variant Metadata
-    tag = 'sometag'
+    tag = 'somecomponent1-somecomponent2-somedistro'
     distro = 'somedistro'
-    tag_without_distro = 'sometag'
-    build_dir_rel = './variants/distro/builddirectory'
-    build_dir = '/full/path/to/variants/distro/builddirectory'
+    tag_without_distro = 'somecomponent1-somecomponent2'    # Automatically populated
+    components = @( 'somecomponent1'                        # Automatically populated
+                    'somecomponent2' )
+    build_dir_rel = './variants/distro/builddirectory'      # Automatically populated
+    build_dir = '/full/path/to/variants/distro/builddirectory'   # Automatically populated
     version = $VARIANTS_VERSION
 
     # Variants Build context template definition
@@ -51,7 +53,7 @@ $VARIANT = @{
                     }
                     @{
                         variables = @{
-                            zzz = 'bar'
+                            foo = 'bar'
                         }
                         generatedFileNameOverride = 'Dockerfile.zzz'
                     }
