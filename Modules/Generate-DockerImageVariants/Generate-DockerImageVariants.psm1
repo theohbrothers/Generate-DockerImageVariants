@@ -57,6 +57,117 @@ function Get-ContextFileContent {
     }
 }
 
+# For validation of the $VARIANTS object
+$VARIANTS_PROTOTYPE = @(
+    @{
+        tag = ""
+        distro = ""
+        version = ""
+        submodules = @{
+            foo = "some_git_url"
+        }
+        tag_without_distro = ""
+        components = @( 'foo' )
+        build_dir_rel = ""
+        build_dir = ""
+        buildContextFiles = @{
+            templates = @{
+                'foo' = @{
+                    common = $false
+                    includeHeader = $false
+                    includeFooter = $false
+                    passes = @(
+                        @{
+                            variables = @{
+                                foo = 'bar'
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
+)
+# For validation of the $FILES object
+$FILES_PROTOTYPE = @( 'foo' )
+
+# For validation of a given object, against its expected prototype
+function Validate-Object {
+    [CmdletBinding(DefaultParameterSetName='Default')]
+    param (
+        [Parameter(Mandatory=$true, ParameterSetName='Pipeline', Position=0)]
+        [Parameter(Mandatory=$true, ParameterSetName='Default')]
+        [object]$Prototype
+    ,
+        [Parameter(Mandatory=$true, ValueFromPipeline, ParameterSetName='Pipeline')]
+        [Parameter(Mandatory=$true, ParameterSetName='Default')]
+        [object]$TargetObject
+    ,
+        [Parameter(Mandatory=$true, ParameterSetName='Pipeline')]
+        [Parameter(Mandatory=$false, ParameterSetName='Default')]
+        [switch]$Mandatory
+    )
+    process {
+        "Validating TargetObject '$Targetobject' of type '$( $Targetobject.GetType().Name )' and basetype '$( $Targetobject.GetType().BaseType )'`tagainst Prototype '$Prototype' of type '$( $Prototype.GetType().Name )' and basetype '$( $Prototype.GetType().BaseType )'" | Write-Verbose
+        if ( $Prototype.GetType().FullName -ne $TargetObject.GetType().FullName ) {
+            throw "Type $( $TargetObject.GetType().FullName ) is invalid! It should be of type '$( $Prototype.GetType().FullName )'"
+        }
+
+        if ( $Prototype -is [string] ) {
+            # Nothing
+        }elseif ( $Prototype -is [array] ) {
+            if ( $Prototype.Count -eq 0 -or $Prototype.Count -gt 1 ) {
+                throw "Invalid prototype! I must contain only one value. Prototype: `n$Prototype"
+            }
+            $_prototype = $Prototype[0]
+            foreach ( $_targetObject in $TargetObject ) {
+                "`tValidating TargetObject '$_targetObject' of type '$( $_targetObject.GetType().Name )' and basetype '$( $_targetObject.GetType().BaseType )'`t`tagainst Prototype '$_prototype' of type '$( $_prototype.GetType().Name )' and basetype '$( $_prototype.GetType().BaseType )'" | Write-Verbose
+                if ($_prototype.GetType().FullName -ne $_targetObject.GetType().FullName) {
+                    throw "Type $( $_targetObject.GetType().FullName ) is invalid! It should be of type '$( $_prototype.GetType().FullName )'"
+                }
+                if ( $_prototype -is [psobject] -or
+                     $_prototype.GetType().FullName -match '^System\.Collections\.Hashtable$|^System\.Collections\.Specialized\.OrderedDictionary$'
+                   ) {
+                    Validate-Object -Prototype $_prototype -TargetObject $_targetObject -Mandatory:$Mandatory
+                }
+            }
+        }else {
+            if ( $Prototype -is [psobject] -or
+                 $Prototype.GetType().FullName -match '^System\.Collections\.Hashtable$|^System\.Collections\.Specialized\.OrderedDictionary$'
+               ) {
+                # Cov
+                $tmpPrototype = if ( $Prototype -is [psobject] ) {
+                                    $hash = @{}
+                                    $Prototype.psobject.properties | % { $hash[$_.Name] = $_.Value }
+                                    $hash
+                                }else {
+                                    $Prototype
+                                }
+                $tmpPrototype.GetEnumerator() | % {
+                    $Key = $_.Name
+                    $_prototype = $tmpPrototype[$Key]
+                    $_targetObject = $TargetObject[$Key]
+
+                    if (!$Mandatory) {
+                        if ($_targetObject -eq $null) {
+                            return
+                        }
+                    }
+
+                    # Ensure we got all properties
+                    if ($_targetObject -eq $null) {
+                        throw "'$Key' is missing"
+                    }
+
+                    Validate-Object -Prototype $_prototype -TargetObject $_targetObject -Mandatory:$Mandatory
+                }
+            }else {
+                throw "Type $( $Prototype.Gettype().FullName ) is invalid. It must be one of the following: string, array, hashtable, psobject"
+            }
+        }
+    }
+}
+
 # This function generates the each Docker image variants' build context files' in ./variants/<variant>, or if a distro is specified, in ./variants/<distro>/<variant>
 function Generate-DockerImageVariants {
     [CmdletBinding()]
@@ -87,13 +198,21 @@ function Generate-DockerImageVariants {
             # Get variants' definition
             . ( Join-Path $GENERATE_DEFINITIONS_DIR "VARIANTS.ps1" ) > $null
 
-            # Get files' definition
-            . ( Join-Path $GENERATE_DEFINITIONS_DIR "FILES.ps1" ) > $null
+            # Get files' definition (optional)
+            if ( Test-Path ( Join-Path $GENERATE_DEFINITIONS_DIR "FILES.ps1" ) ) {
+                . ( Join-Path $GENERATE_DEFINITIONS_DIR "FILES.ps1" ) > $null
+            }
 
             # Normalize globals
-            $VARIANTS = if ( $VARIANTS -isnot [array] ) { @() } else { $VARIANTS }
+            $VARIANTS = if ( $VARIANTS -isnot [array] ) { @() } else { ,$VARIANTS }
             $VARIANTS_SHARED = if ( $VARIANTS_SHARED -isnot [hashtable] ) { @{} } else { $VARIANTS_SHARED }
-            $FILES = if ( $FILES -isnot [array] ) { @() } else { $FILES }
+            $FILES = if ( $FILES -isnot [array] ) { @() } else { ,$FILES }
+
+            # Validate the VARIANTS and FILES defintion objects
+            Validate-Object -Prototype $VARIANTS_PROTOTYPE -TargetObject $VARIANTS -Mandatory:$false
+            if ($FILES) {
+                Validate-Object -Prototype $FILES_PROTOTYPE -TargetObject $FILES -Mandatory:$false
+            }
 
             # Intelligently add properties
             $VARIANTS | % {
@@ -101,6 +220,9 @@ function Generate-DockerImageVariants {
                 $VARIANTS_SHARED.GetEnumerator() | % {
                     $VARIANT[$_.Name] =  $_.Value
                 }
+                $VARIANT['submodules'] = if ( $VARIANT['submodules'] -is [hashtable] -and ($VARIANT['submodules'].Values | % { $_ -is [string] }) ) {
+                                            $VARIANT['submodules']
+                                        } else { @{} }
                 $VARIANT['tag_without_distro'] = if ( $VARIANT['distro'] ) {
                                                     # The variant's build directory name, stripped of the distro name if present
                                                     # E.g. ':git-perl-alpine' or 'alpine-git-perl' becomes ':git-perl'
