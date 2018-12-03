@@ -37,11 +37,15 @@ PARAMETERS
 5. Run the following to generate the files.
 
     ```powershell
-    Import-Module Generate-DockerImageVariants
-    Generate-DockerImageVariants C:/my-variants-project`
+    Generate-DockerImageVariants C:/my-variants-project
     ```
+6. Result:
+    - Build Context files are generated in `/variants/<distro>`
+    - Project files are generated in the same directory structure as defined in `$FILES.ps1`
 
 ## Prerequisite files / folders
+
+A single folder named `/generate` at the base of the repository will hold all the definition and template file. The folder stucture looks like this:
 
 `/generate/definitions` - the folder contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
    - `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and definitions of the template of each file to be included in the image build context.
@@ -69,7 +73,7 @@ $VARIANTS = @(
             templates = @{
                 # We want to generate the file 'Dockerfile'
                 'Dockerfile' = @{
-                    # This template file should not be shared among distros
+                    # Specifies that the template file should not be shared among distros
                     common = $false
                     passes = @(
                         # The first template-pass
@@ -93,13 +97,19 @@ $FILES = @(
 )
 ```
 
-Two examples are included in the `examples` folder of this repository: one to generate a simple repo with few variants, and the other to generate a more complex repo with more variants.
+With these files, execute the following
+```powershell
+Generate-DockerImageVariants C:/my-variants-project`
+```
+
+This will produce
+Two examples have been included in `examples` folder: one generates a simple repo with few variants, and the other generates a more complex repo with more variants.
 
 ## Customizing a Variant's Build Context file's generation
 
 This is the `buildContextFiles` property of the `$VARIANT` object. It includes these properties:
 
-- `common` - (Optional) Specifies whether this file is shared by all distros ( If yes, has to be present in `./templates`. If not, has to be present in `./templates/<file>/<distro>/` if there's a variant `distro` defined, or has to be present in  `./templates/<file>/` if no variant `distro` is defined.)
+- `common` - (Optional) Specifies whether this file is shared by all distros ( If yes, has to be present in `/generate/templates`. If not, has to be present in `/generate/templates/<file>/<distro>/` if there's a variant `distro` defined, or has to be present in  `/generate/templates/<file>/` if no variant `distro` is defined.)
 
 - `includeHeader` - (Optional) Specifies to include file called `<file>.header.ps1`. Location determined by `common`
 
@@ -148,7 +158,7 @@ During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of t
 
 ## Variables available during a template-pass (generation of a file)
 
-Each pass processes a `<file>.ps1` template and generates a single file. These variables are available in the scope of the `<file>.ps1` file:
+Each pass processes a `<file>.ps1` template and generates a single file. The following variables are available in the scope of the `<file>.ps1` file:
 - `$VARIANT` - the variant object
 - `$PASS_VARIABLES` - a hashtable containing the custom variables defined in the Variant's Build context template definition
 
@@ -156,7 +166,7 @@ Each pass processes a `<file>.ps1` template and generates a single file. These v
 
 The generation of a build context might not always involve processing templates. Sometimes we simply want to copy a file into the build context.
 
-To copy a file, simply use the array property `copies`
+To copy a file, simply use the property `copies` in `buildContextFiles`:
 
 ```powershell
 $VARIANTS = @(
@@ -166,6 +176,7 @@ $VARIANTS = @(
         distro = 'alpine'
 
         buildContextFiles = @{
+            # An array of files to copy to the Build Context
             copies = @(
                 '/app'
             )
@@ -174,11 +185,11 @@ $VARIANTS = @(
 }
 ```
 
-This will copy all descending files/folders of the `/app` folder located relative to the *base* of the repository into the image build directory.
+This will copy all descending files/folders of the `/app` folder located relative to the *base* of the repository into the to-be-generated `perl-git` variant's build directory (`/variants/alpine/perl-git`) as `/variants/alpine/perl-git/app`.
 
-## Advanced: Component-chaining
+## Advanced: Generate a single variant with Component-chaining
 
-When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The result of processing each component template will be concatanated to form the final generated file. For instance, suppose you want a variant that generates a Dockerfile that installs `perl` and `git`:
+When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The result of processing each component template will be concatanated to form the final generated file. For instance, suppose you want a variant that generates a Dockerfile that installs `perl` and `git`, in `DEFINITIONS.ps1:
 
 ```powershell
 $VARIANTS = @(
@@ -194,7 +205,7 @@ $VARIANTS = @(
             templates = @{
                 # We want to generate the file 'Dockerfile'
                 'Dockerfile' = @{
-                    # This template file should not be shared among distros
+                    # Specifies that the template file should not be shared among distros
                     common = $false
                     passes = @(
                         # The first template-pass
@@ -211,11 +222,72 @@ $VARIANTS = @(
 ```
 
 The template pass to generate `Dockerfile` proceeds as such:
-1. The file `./variants/Dockerfile/alpine/Dockerfile.header.ps1` is processed
-2. Now the files `./variants/Dockerfile/alpine/perl/perl.ps1` and `./variants/Dockerfile/alpine/git/git.ps1` are processed in the left-to-right order.
-3. The file `./variants/Dockerfile/alpine/Dockerfile.footer.ps1` is processed
+1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.header.ps1` is processed
+2. Now the files `/generate/templates//Dockerfile/alpine/perl/perl.ps1` and `/generate/templates//Dockerfile/alpine/git/git.ps1` are processed in the left-to-right order.
+3. The file `/generate/templates//Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
 **Note: If a variant's `tag` consist of a word that matches the variant's `distro`, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `perl-git-alpine`, there will still only be two components `perl` and `git`. `alpine` will not be considered a component. This will then allow variants to be tagged with the `distro` keyword without having to process a 'phantom' distro template file.
+
+Upon generation, **one** variant namely `perl-git` will have its build context generated in its corresponding folders, relative to the base of the project:
+    - `/variants/alpine/perl-git`
+
+See the `examples` folder of this module's repository for a real example.
+
+### Generate multiple variants
+
+The previous example shows show to generate a single variant.
+
+This example shows how to generate three variants.
+
+To generate multiple image variants, all sharing a common `buildContextFiles` template, declare this in `DEFINITIONS.ps1`, declaring `buildContextFiles` property in a special hashtable `$VARIANTS_SHARED`
+
+```powershell
+# Docker image variants' definitions
+$VARIANTS = @(
+    # Our first variant
+    @{
+        tag = 'perl-git'
+        distro = 'alpine'
+    }
+    # Our second variant
+    @{
+        tag = 'perl'
+        distro = 'alpine'
+    }
+    # Our third variant
+    @{
+        tag = 'git'
+        distro = 'alpine'
+    }
+}
+
+# This is a special variable that sets a common buildContextFiles definition for all variants
+# Docker image variants' definitions (shared)
+$VARIANTS_SHARED = @{
+    buildContextFiles = @{
+        templates = @{
+            # We want to generate the file 'Dockerfile'
+            'Dockerfile' = @{
+                # Specifies that the template file should not be shared among distros
+                common = $false
+                passes = @(
+                    # The first template-pass
+                    @{
+                        # Customize the pass here
+                    }
+                )
+            }
+        }
+    }
+}
+```
+
+Upon generation, **three** variants namely `perl-git`, `perl`, and `git` will have their build contexts generated in their corresponding folders, relative to the base of the project:
+    - `/variants/alpine/perl-git`
+    - `/variants/alpine/perl`
+    - `/variants/alpine/git`
+
+See the `examples` folder of this module's repository for a real example.
 
 ## Optional: Generate repository files
 
@@ -223,7 +295,7 @@ As described in the present repository's description, this module is able to gen
 1) the Docker Image variants which has been covered above
 2) other repository files.
 
-To generate the other repository files, first, define the `$FILES` array  in the `FILES.ps1`file:
+To generate the other repository files, first, define the `$FILES` array in the `FILES.ps1`file:
 
 ```powershell
 # Files' definition
@@ -231,10 +303,9 @@ $FILES = @(
     '.gitlab-ci.yml'
     'README.md'
 )
-
 ```
 
-Next, create two template files in the `./templates` directory:
+Next, create two template files in the `/generate/templates` directory:
 
 - `.gitlab-ci.yml.ps1`
 - `README.md.ps1`
@@ -244,13 +315,13 @@ Now, the generation results in two files, relative to the base of the project:
 - `/.gitlab-ci.yml`
 - `/README.md`
 
-The variables `$VARIANTS` will be available during the processing of the template files `./variants/.gitlab-ci.yml.ps1` and `./variants/README.md.ps1`.
+The variables `$VARIANTS` will be available during the processing of the template files `/generate/templates/.gitlab-ci.yml.ps1` and `/generate/templates/README.md.ps1`.
 
 ## Appendix
 
 ### Variant object properties
 
-A `$VARIANT` definition must contain these properties.
+A `$VARIANT` definition will contain these properties.
 
 ```powershell
 $VARIANT = @{
@@ -295,9 +366,9 @@ $VARIANT = @{
 
 ### Debugging the variants / file definitions
 
-If any variants / file definitions are incorrect, the module will throw a terminating error.
+If any definitions in `/generate/definitions/VARIANTS.ps1` or `/generate/definitions/FILES.ps1` are incorrect, the module will throw a terminating error.
 
-To find out which part of your defintion is wrong, use the `-Verbose` switch. It gives a trace of the validation steps, for instance, if a variant was define with an incorrect type (expected to be `hashtable`):
+To find out which part of your defintion is wrong, use the `-Verbose` switch. It gives a trace of the validation steps, for instance, if a variant was defined with an incorrect type (expected to be `hashtable`):
 
 ```powershell
 $VARIANTS = @(
