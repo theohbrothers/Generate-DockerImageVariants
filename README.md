@@ -45,7 +45,7 @@ PARAMETERS
 
 ## Prerequisite files / folders
 
-A single folder named `/generate` at the base of the repository will hold all the definition and template file. The folder stucture looks like this:
+A single folder named `/generate` at the base of the repository will hold all the definition and template files. The folder stucture looks like this:
 
 `/generate/definitions` - the folder contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
    - `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and definitions of the template of each file to be included in the image build context.
@@ -102,7 +102,8 @@ With these files, execute the following
 Generate-DockerImageVariants C:/my-variants-project`
 ```
 
-This will produce
+This will produce a generated variant build context in `/variants/alpine/perl-git` and a file `README.md`, both at the base of the project.
+
 Two examples have been included in `examples` folder: one generates a simple repo with few variants, and the other generates a more complex repo with more variants.
 
 ## Customizing a Variant's Build Context file's generation
