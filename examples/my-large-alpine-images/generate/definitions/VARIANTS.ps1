@@ -27,7 +27,7 @@ $VARIANTS = @(
     }
 )
 
-# This is a special variable that sets a common buildContextFiles definition for all variants
+# This is a special global that sets a common buildContextFiles definition for all variants
 # Docker image variants' definitions (shared)
 $VARIANTS_SHARED = @{
     version = $VARIANTS_VERSION
