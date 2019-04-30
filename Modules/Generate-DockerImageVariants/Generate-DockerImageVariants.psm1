@@ -1,4 +1,4 @@
-$GENERATE_DOCKERIMAGEVARIANTS_VERSION = 'v0.1.0'
+$GENERATE_DOCKERIMAGEVARIANTS_VERSION = 'v0.1.1'
 function Get-ContentFromTemplate {
     param (
         [ValidateNotNullOrEmpty()]
