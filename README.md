@@ -1,6 +1,6 @@
 # Generate-DockerImageVariants
 
-A Powershell Module to easily generate a repository populated with Docker image variants'.
+A Powershell Module to easily generate a repository populated with Docker image variants.
 
 ### Command line
 
@@ -190,7 +190,7 @@ This will copy all descending files/folders of the `/app` folder located relativ
 
 ## Advanced: Generate a single variant with Component-chaining
 
-When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The result of processing each component template will be concatanated to form the final generated file. For instance, suppose you want a variant that generates a Dockerfile that installs `perl` and `git`, in `DEFINITIONS.ps1:
+When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The result of processing each component template will be concatanated to form the final generated file. For instance, suppose you want a variant that generates a Dockerfile that installs `perl` and `git`, in `DEFINITIONS.ps1`:
 
 ```powershell
 $VARIANTS = @(
@@ -224,13 +224,12 @@ $VARIANTS = @(
 
 The template pass to generate `Dockerfile` proceeds as such:
 1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.header.ps1` is processed
-2. Now the files `/generate/templates//Dockerfile/alpine/perl/perl.ps1` and `/generate/templates//Dockerfile/alpine/git/git.ps1` are processed in the left-to-right order.
+2. Now the files `/generate/templates//Dockerfile/alpine/perl/perl.ps1` and `/generate/templates/Dockerfile/alpine/git/git.ps1` are processed in the left-to-right order.
 3. The file `/generate/templates//Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
 **Note: If a variant's `tag` consist of a word that matches the variant's `distro`, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `perl-git-alpine`, there will still only be two components `perl` and `git`. `alpine` will not be considered a component. This will then allow variants to be tagged with the `distro` keyword without having to process a 'phantom' distro template file.
 
-Upon generation, **one** variant namely `perl-git` will have its build context generated in its corresponding folders, relative to the base of the project:
-    - `/variants/alpine/perl-git`
+Upon generation, **one** variant namely `perl-git` will have its build context generated in its corresponding folder, relative to the base of the project: `/variants/alpine/perl-git`
 
 See the `examples` folder of this module's repository for a real example.
 
@@ -284,9 +283,10 @@ $VARIANTS_SHARED = @{
 ```
 
 Upon generation, **three** variants namely `perl-git`, `perl`, and `git` will have their build contexts generated in their corresponding folders, relative to the base of the project:
-    - `/variants/alpine/perl-git`
-    - `/variants/alpine/perl`
-    - `/variants/alpine/git`
+
+- `/variants/alpine/perl-git`
+- `/variants/alpine/perl`
+- `/variants/alpine/git`
 
 See the `examples` folder of this module's repository for a real example.
 
