@@ -62,7 +62,6 @@ $VARIANTS_PROTOTYPE = @(
     @{
         tag = ""
         distro = ""
-        version = ""
         submodules = @{
             foo = "some_git_url"
         }
