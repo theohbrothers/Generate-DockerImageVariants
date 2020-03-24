@@ -334,7 +334,6 @@ $VARIANT = @{
                     'somecomponent2' )
     build_dir_rel = './variants/distro/builddirectory'      # Automatically populated
     build_dir = '/full/path/to/variants/distro/builddirectory'   # Automatically populated
-    version = $VARIANTS_VERSION
 
     # Build context template definition
     buildContextFiles = @{
