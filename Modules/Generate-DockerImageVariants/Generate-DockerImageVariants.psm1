@@ -289,6 +289,7 @@ function Generate-DockerImageVariants {
                                 $templateObject['TemplatePassVariables'] = if ( $pass['variables'] ) { $pass['variables'] } else { @() }
                                 $generatedFile = if ( $pass['generatedFileNameOverride'] ) { "$( $VARIANT['build_dir'] )/$( $pass['generatedFileNameOverride'] )" } else { $generatedFile }
                                 $generatedFileContent = Get-ContextFileContent @templateObject
+                                New-Item $generatedFile -ItemType File -Force > $null
                                 $generatedFileContent | Out-File $generatedFile -Encoding Utf8 -Force -NoNewline
                             }
                         }

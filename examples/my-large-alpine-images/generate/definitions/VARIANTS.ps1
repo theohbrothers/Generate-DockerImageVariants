@@ -45,6 +45,18 @@ $VARIANTS_SHARED = @{
                     }
                 )
             }
+            'config/config.yml' = @{
+                common = $true
+                includeHeader = $false
+                includeFooter = $false
+                passes = @(
+                    @{
+                        variables = @{
+                            foo = 'bar'
+                        }
+                    }
+                )
+            }
         }
         copies = @(
             '/app'
