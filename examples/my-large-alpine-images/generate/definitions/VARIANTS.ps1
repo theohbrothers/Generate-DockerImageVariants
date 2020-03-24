@@ -23,6 +23,7 @@ $VARIANTS = @(
     @{
         tag = 'perl-python-git'
         distro = 'alpine'
+        tag_as_latest = $true
     }
 )
 

@@ -329,6 +329,7 @@ $VARIANT = @{
     # Variant Metadata
     tag = 'somecomponent1-somecomponent2-somedistro'
     distro = 'somedistro'
+    tag_as_latest = $true                                   # Automatically populated if unspecified
     tag_without_distro = 'somecomponent1-somecomponent2'    # Automatically populated
     components = @( 'somecomponent1'                        # Automatically populated
                     'somecomponent2' )
