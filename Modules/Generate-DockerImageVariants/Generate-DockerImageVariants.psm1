@@ -206,7 +206,7 @@ function Generate-DockerImageVariants {
             # Normalize globals
             $VARIANTS = if ( $VARIANTS -isnot [array] ) { @() } else { ,$VARIANTS }
             $VARIANTS_SHARED = if ( $VARIANTS_SHARED -isnot [hashtable] ) { @{} } else { $VARIANTS_SHARED }
-            $FILES = if ( $FILES -isnot [array] ) { @() } else { ,$FILES }
+            $FILES = if ( $FILES -isnot [array] ) { ,@() } else { ,$FILES }
 
             # Validate the VARIANTS and FILES defintion objects
             Validate-Object -Prototype $VARIANTS_PROTOTYPE -TargetObject $VARIANTS -Mandatory:$false
