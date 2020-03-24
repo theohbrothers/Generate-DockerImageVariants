@@ -62,6 +62,7 @@ $VARIANTS_PROTOTYPE = @(
     @{
         tag = ""
         distro = ""
+        tag_as_latest = $false
         submodules = @{
             foo = "some_git_url"
         }
@@ -131,7 +132,21 @@ function Validate-Object {
                 }
             }
         }else {
-            if ( $Prototype -is [psobject] -or
+            if ( $Prototype -is [bool] ) {
+                if (!$Mandatory) {
+                    if ($_targetObject -eq $null) {
+                        return
+                    }
+                }
+                # Ensure we got all properties
+                if ($_targetObject -eq $null) {
+                    throw "'$Key' is missing"
+                }
+                if ( $TargetObject -isnot [bool] ) {
+                    throw "'$Key' should be of type [bool]"
+                }
+                return
+            }elseif ( $Prototype -is [psobject] -or
                  $Prototype.GetType().FullName -match '^System\.Collections\.Hashtable$|^System\.Collections\.Specialized\.OrderedDictionary$'
                ) {
                 # Cov
@@ -161,7 +176,7 @@ function Validate-Object {
                     Validate-Object -Prototype $_prototype -TargetObject $_targetObject -Mandatory:$Mandatory
                 }
             }else {
-                throw "Type $( $Prototype.Gettype().FullName ) is invalid. It must be one of the following: string, array, hashtable, psobject"
+                throw "Type $( $Prototype.Gettype().FullName ) is invalid. It must be one of the following: bool, string, array, hashtable, psobject"
             }
         }
     }
@@ -219,6 +234,7 @@ function Generate-DockerImageVariants {
                 $VARIANTS_SHARED.GetEnumerator() | % {
                     $VARIANT[$_.Name] =  $_.Value
                 }
+                $VARIANT['tag_as_latest'] = if ($VARIANT.Contains('tag_as_latest')) { $variant['tag_as_latest'] } else { $false }
                 $VARIANT['submodules'] = if ( $VARIANT['submodules'] -is [hashtable] -and ($VARIANT['submodules'].Values | % { $_ -is [string] }) ) {
                                             $VARIANT['submodules']
                                         } else { @{} }
