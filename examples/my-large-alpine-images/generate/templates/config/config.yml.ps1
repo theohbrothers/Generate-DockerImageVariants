@@ -1,0 +1,3 @@
+@"
+foo: $( $_['variables']['foo'] )
+"@
