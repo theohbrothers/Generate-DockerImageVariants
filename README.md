@@ -282,6 +282,8 @@ $VARIANTS_SHARED = @{
 }
 ```
 
+Note that properties defined in the `$VARIANTS_SHARED` will override their corresponding local properties in the `$VARIANT` object.
+
 Upon generation, **three** variants namely `perl-git`, `perl`, and `git` will have their build contexts generated in their corresponding folders, relative to the base of the project:
 
 - `/variants/alpine/perl-git`
