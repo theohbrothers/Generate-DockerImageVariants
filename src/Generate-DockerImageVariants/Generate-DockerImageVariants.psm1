@@ -327,10 +327,14 @@ function Generate-DockerImageVariants {
 
             }
 
-            # Generate other repo files
-            $FILES | % {
-                # Generate README.md
-                Get-ContentFromTemplate -Path (Join-Path $GENERATE_TEMPLATES_DIR "$_.ps1") | Out-File (Join-Path $PROJECT_BASE_DIR $_) -Encoding utf8 -NoNewline
+            # Generate other repo files. E.g. README.md
+            foreach ($file in $FILES) {
+                $fileAbsolutePath = [io.path]::Combine($PROJECT_BASE_DIR, $file)
+                $fileParentAbsolutePath = Split-Path $fileAbsolutePath -Parent
+                if ( ! (Test-Path $fileParentAbsolutePath -PathType Container) ) {
+                    New-Item $fileParentAbsolutePath -ItemType Directory -Force > $null
+                }
+                Get-ContentFromTemplate -Path (Join-Path $GENERATE_TEMPLATES_DIR "$file.ps1") | Out-File $fileAbsolutePath -Encoding utf8 -NoNewline
             }
         }catch {
             if ($VerbosePreference) { "Failed with errors. Exception: $( $_.Exception.Message ). Stacktrace: $( $_.ScriptStackTrace )" | Write-Warning }
