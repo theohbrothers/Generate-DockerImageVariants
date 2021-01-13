@@ -132,9 +132,7 @@ See the [`/examples/basic-distro`](examples/basic-distro) example.
 
 ## Generation of a variant's built context file(s) through template processing
 
-Based on example located in [`/examples/basic-distro`](examples/basic-distro).
-
-This is the `buildContextFiles` property of the `$VARIANT` object. It includes these properties:
+Use the `buildContextFiles` property of the `$VARIANT` object. It includes these properties:
 
 - `common` - (Optional, defaults to `$false`) Specifies whether this file is shared by all distros ( If value is `$true`, template has to be present in `/generate/templates/<template>.ps1`. If value is `$false`, and if a variant `distro` is defined, it has to be present in `/generate/templates/<file>/<distro>/`, or if a variant `distro` is omitted, has to be present in  `/generate/templates/<template>/<template>.ps1`.)
 - `includeHeader` - (Optional, defaults to `$false`) Specifies to process a template `<file>.header.ps1`. Location determined by `common`
@@ -188,12 +186,14 @@ $VARIANTS = @(
 }
 ```
 
-Then, the following variables are available in the scope of the `<file>.ps1` file:
+Then, the following variables are now available in the scope of the `<file>.ps1` file:
 
 - `$VARIANT` - the variant object
 - `$PASS_VARIABLES` - a hashtable containing the custom variables defined in the Variant's Build context template pass definition
 
 During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of the processed `Dockerfile.ps1` template. For instance, in the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
+
+See the [`examples/basic-distro-variables`](examples/basic-distro-variables) example for using variables.
 
 ## Generation of a variant's built context through file copying
 
