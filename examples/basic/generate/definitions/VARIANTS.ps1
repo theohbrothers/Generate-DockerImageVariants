@@ -1,9 +1,10 @@
 # Docker image variants' definitions
 $VARIANTS = @(
     @{
-        # The tag is the Docker Image tag.
+        # Specifies the docker image tag
         tag = 'curl'
-        # Defining a distro is optional. If you dont define a distro, you assume all your variants use the same distro.
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = ''
     }
 )
@@ -13,11 +14,14 @@ $VARIANTS = @(
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
+            # The path of the template to process, relative to the templates directory, omitting the '.ps1' extension
             'Dockerfile' = @{
-                # Specifies that the template file is common (shared) across distros
+                # Specifies whether the template is common (shared) across distros
                 common = $true
+                # Specifies a list of passes the template will be undergo, where each pass generates a file
                 passes = @(
                     @{
+                        # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                         variables = @{}
                     }
                 )

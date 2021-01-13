@@ -1,18 +1,18 @@
 # Docker image variants' definitions
 $VARIANTS = @(
     @{
-        # The tag is the Docker Image tag.
+        # Specifies the docker image tag
         tag = 'curl-alpine'
-        # Defining a distro is optional. If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if you do define a distro, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
     }
 
     @{
-        # The tag is the Docker Image tag.
+        # Specifies the docker image tag
         tag = 'curl-ubuntu'
-        # Defining a distro is optional. If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if you do define a distro, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'ubuntu'
     }
 )
@@ -22,12 +22,18 @@ $VARIANTS = @(
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
+            # The path of the template to process, relative to the templates directory, omitting the '.ps1' extension
             'Dockerfile' = @{
+                # Specifies whether the template is common (shared) across distros
                 common = $false
+                # Specifies whether the template <file>.header.ps1 will be processed. Useful for Dockerfiles
                 includeHeader = $true
+                # Specifies whether the template <file>.footer.ps1 will be processed. Useful for Dockerfiles
                 includeFooter = $true
+                # Specifies a list of passes the template will be undergo, where each pass generates a file
                 passes = @(
                     @{
+                        # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                         variables = @{}
                     }
                 )
