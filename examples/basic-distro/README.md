@@ -1,4 +1,4 @@
-# my-small-alpine-images
+# basic-distro
 
 | Tags |
 |:-------:| 

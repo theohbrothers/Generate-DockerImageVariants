@@ -1,5 +1,5 @@
 @"
-# my-large-alpine-images
+# advanced-component-chaining-copies-variables
 
 | Tags |
 |:-------:| $( $VARIANTS | % {

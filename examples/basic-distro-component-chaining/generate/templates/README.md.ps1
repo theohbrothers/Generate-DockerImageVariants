@@ -1,5 +1,5 @@
 @"
-# my-small-alpine-images
+# basic-distro-component-chaining
 
 | Tags |
 |:-------:| $( $VARIANTS | % {
