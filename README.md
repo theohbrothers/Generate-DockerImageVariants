@@ -130,7 +130,7 @@ Upon generation, a file `/variants/alpine/curl/Dockerfile` is generated in the `
 
 See the [`/examples/basic-distro`](examples/basic-distro) example.
 
-## Customizing a Variant's Build Context file's generation
+## Generation of a variant's built context file(s) through template processing
 
 Based on example located in [`/examples/basic-distro`](examples/basic-distro).
 
@@ -141,7 +141,9 @@ This is the `buildContextFiles` property of the `$VARIANT` object. It includes t
 - `includeFooter` - (Optional, defaults to `$false`) Specifies to iprocess a template `<file>.footer.ps1`. Location determined by `common`
 - `passes` - (Mandatory) An array of pass definitions that the template will undergo. Each pass will generate a single file.
 
-Each pass processes a `<file>.ps1` template and generates a single file. A pass can be configured with the `variables` and `generatedFileNameOverride` properties:
+Each template pass processes a template file `<file>.ps1` template and generates a single file named `<file>` in the variant's build context.
+
+A pass can be configured with the `variables` and `generatedFileNameOverride` properties:
 
 ```powershell
 $VARIANTS = @(
@@ -186,18 +188,16 @@ $VARIANTS = @(
 }
 ```
 
-During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of the processed `Dockerfile.ps1` template. For instance, in the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
-
-## Variables available during a template-pass (generation of a build context file)
-
-Each pass processes a `<file>.ps1` template and generates a single file. The following variables are available in the scope of the `<file>.ps1` file:
+Then, the following variables are available in the scope of the `<file>.ps1` file:
 
 - `$VARIANT` - the variant object
 - `$PASS_VARIABLES` - a hashtable containing the custom variables defined in the Variant's Build context template pass definition
 
-## Copy files instead of Template-passing
+During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of the processed `Dockerfile.ps1` template. For instance, in the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
 
-The generation of a build context might not always involve processing templates. Sometimes we simply want to copy a file into the build context.
+## Generation of a variant's built context through file copying
+
+Populating a build context might not always involve processing templates. Sometimes we simply want to copy a file into the build context.
 
 To copy a file, simply use the property `copies` in `buildContextFiles`:
 
@@ -205,13 +205,13 @@ To copy a file, simply use the property `copies` in `buildContextFiles`:
 $VARIANTS = @(
     # Our first variant
     @{
-        tag = 'curl-git'
+        tag = 'curl'
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
 
         buildContextFiles = @{
-            # An array of files to copy to the Build Context
+            # Specifies the paths, relative to the root of the repository, to recursively copy into each variant's build context
             copies = @(
                 '/app'
             )
@@ -220,11 +220,13 @@ $VARIANTS = @(
 }
 ```
 
-This will copy all descending files/folders of the `/app` folder located relative to the *base* of the repository into the to-be-generated `curl-git` variant's build directory (`/variants/alpine/curl-git`) as `/variants/alpine/curl-git/app`.
+This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/alpine/curl` as `/variants/alpine/curl/app`.
 
-## Advanced: Generate a single variant with Component-chaining
+See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
 
-When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The final generated file will be a concatanation of the product of processing the template of each component specified in this chain.
+## Advanced: Generation of a single variant's built context file(s) using Component-chaining
+
+When a variant's `tag` contains words delimited by `-`, it known as **Component-chaining**. The final generated file will be a concatanation of the product of processing the template of each component specified in this chain.
 
 For instance, suppose you want a variant that generates a `Dockerfile` that installs `curl` and `git`, in `DEFINITIONS.ps1`:
 
@@ -272,15 +274,11 @@ The template pass to generate the variant's build context `Dockerfile` proceeds 
 
 The file `/variants/alpine/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/alpine/curl-git`
 
-See the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) folder for a real example.
+See the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
 
-### Generate multiple variants
+## Advanced: Generation of a multiple variants' built context file(s) using Component-chaining
 
-The previous example shows show to generate a single variant.
-
-This example shows how to generate three variants.
-
-To generate multiple image variants, all sharing a common `buildContextFiles` template, declare this in `DEFINITIONS.ps1`, declaring `buildContextFiles` property in a special hashtable `$VARIANTS_SHARED`
+To generate multiple build context variants, all sharing a common `buildContextFiles` template, declare this in `DEFINITIONS.ps1`, declaring `buildContextFiles` property in a special hashtable `$VARIANTS_SHARED`.
 
 ```powershell
 # Docker image variants' definitions
@@ -352,13 +350,13 @@ Upon generation, **three** variants build contexts for variants `curl-git`, `cur
 |           └── Dockerfile
 ```
 
-See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) folder of this module's repository for a real example.
+See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
 
-## Optional: Generate repository files
+## Optional: Generate other repository files
 
-As described in the present repository's description, this module is able to generate, based on tempaltes, a complete repository consisting of:
+This module can generate generate a complete repository consisting of:
 
-1. variants build contexts
+1. variants build contexts (as covered above)
 2. other repository files unrelated to variants build contexts
 
 To populate a repository other repository files, first, define the `$FILES` array in the `FILES.ps1`file:
@@ -391,7 +389,7 @@ Now, the generation results in two files, relative to the base of the project:
 
 The variables `$VARIANTS` will be available during the processing of the template files `/generate/templates/.gitlab-ci.yml.ps1` and `/generate/templates/README.md.ps1`.
 
-See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) folder of this module's repository for a real example.
+See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
 
 ## Appendix
 
