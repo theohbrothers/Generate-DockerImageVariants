@@ -6,4 +6,5 @@ Import-Module ( Join-Path ( Join-Path ( Join-Path $PROJECT_DIR 'src' ) 'Generate
 # Generate examples
 Generate-DockerImageVariants -Version
 Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic' ) -ErrorAction Stop -Verbose
+Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro' ) -ErrorAction Stop -Verbose
 Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'advanced-component-chaining-copies-variables' ) -ErrorAction Stop -Verbose
