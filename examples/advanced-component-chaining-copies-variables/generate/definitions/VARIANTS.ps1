@@ -41,7 +41,7 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
-        # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files.
+        # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
         tag_as_latest = $true
     }
 )
