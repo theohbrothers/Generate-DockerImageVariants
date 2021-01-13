@@ -5,5 +5,5 @@ Import-Module ( Join-Path ( Join-Path ( Join-Path $PROJECT_DIR 'src' ) 'Generate
 
 # Generate examples
 Generate-DockerImageVariants -Version
-Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'my-small-alpine-images' ) -ErrorAction Stop -Verbose
+Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic' ) -ErrorAction Stop -Verbose
 Generate-DockerImageVariants -ProjectPath ( Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'my-large-alpine-images' ) -ErrorAction Stop -Verbose

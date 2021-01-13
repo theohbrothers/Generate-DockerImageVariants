@@ -1,8 +1,10 @@
 # Docker image variants' definitions
 $VARIANTS = @(
     @{
+        # The tag is the Docker Image tag.
         tag = 'curl'
-        distro = 'alpine'
+        # Defining a distro is optional. If you dont define a distro, you assume all your variants use the same distro.
+        distro = ''
     }
 )
 
@@ -12,9 +14,8 @@ $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
             'Dockerfile' = @{
-                common = $false
-                includeHeader = $true
-                includeFooter = $true
+                # Specifies that the template file is common (shared) across distros
+                common = $true
                 passes = @(
                     @{
                         variables = @{}
