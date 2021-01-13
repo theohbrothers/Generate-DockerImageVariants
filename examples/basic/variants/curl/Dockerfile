@@ -5,4 +5,4 @@ RUN apk update \
     && apk add --no-cache curl \
     && rm -rf /var/cache/apk/*
 
-CMD ["cron", "-f"]
+CMD ["crond", "-f"]
