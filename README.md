@@ -2,7 +2,7 @@
 
 A Powershell Module to easily generate a repository populated with Docker image variants.
 
-### Command line
+## Command line
 
 ```powershell
 NAME
@@ -28,44 +28,63 @@ PARAMETERS
 
 1. [Install](https://docs.microsoft.com/en-us/powershell/developer/module/installing-a-powershell-module#install-modules-in-psmodulepath) the `Generate-DockerImageVariants` Powershell Module
 
-2. Create a folder called `/generate` in a repo
+1. Create templates in `/generate`.
 
-3. Create a definitions folder `/generate/definitions`, containing two files `VARIANTS.ps1` and `FILES.ps1` populated with definitions.
-
-4. Create a templates folder called `/generate/templates` and create  template files. E.g. `/generate/templates/Dockerfile.ps1`
-
-5. Run the following to generate the files.
+1. Generate the variants:
 
     ```powershell
-    Generate-DockerImageVariants C:/my-variants-project
+    Generate-DockerImageVariants /path/to/my-repository
     ```
-6. Result:
-    - Build Context files are generated in `/variants/<distro>`
-    - Project files are generated in the same directory structure as defined in `$FILES.ps1`
 
-## Prerequisite files / folders
+1. Build contexts of variants are generated in `/variants`. The repository tree now looks like:
 
-A single folder named `/generate` at the base of the repository will hold all the definition and template files. The folder stucture looks like this:
+    ```sh
+    .
+    ├── generate
+    │   ├── definitions
+    │   │   ├── FILES.ps1
+    │   │   └── VARIANTS.ps1
+    │   └── templates
+    │       ├── Dockerfile.ps1
+    │       └── README.md.ps1
+    ├── README.md
+    └── variants
+        └── alpine
+            └── Dockerfile
+    ```
 
-`/generate/definitions` - the folder contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
-   - `VARIANTS.ps1` - a generation definition file containing definitions of the image variants and definitions of the template of each file to be included in the image build context.
-   - `FILES.ps1` - an *optional* generation definition file containing definitions of the repository files you want to generate.
+## Generation definitions and templates
 
-`/generate/templates` - the folder with your templates (`.ps1` files) used for generating files according to your generation definitions
+A single folder named `/generate` at the base of the repository will hold all the definition and template files.
 
-At minimum, the `VARIANTS.ps1` definition file should contain the `$VARIANTS` definition like this:
+- `/generate/definitions` is the definitions folder containing two files `VARIANTS.ps1` and `FILES.ps1` populated with definitions
+- `/generate/templates` is the templates folder and create template files. E.g. `/generate/templates/Dockerfile.ps1` or `/generate/templates/README.md.ps1`
+
+```sh
+.
+├── generate
+│   ├── definitions         # This is the definitions folder. It contains the `VARIANTS.ps1` and the `FILES.ps1` generation definitions
+│   │   ├── FILES.ps1       # An *optional* generation definition file containing definitions of the repository files you want to generate.
+│   │   └── VARIANTS.ps1    # A generation definition file containing definitions of the image variants and definitions of the template of each file to be included in the image build context.
+│   └── templates           # This is the templates folder.  with your templates (`.ps1` files) used for generating files according to your generation definitions
+│       ├── Dockerfile.ps1  # Dockerfile template (shared among variants across all distros)
+│       └── README.md.ps1   # README.md template
+```
+
+At minimum, the `/generate/definitions/VARIANTS.ps1` definition file should contain the `$VARIANTS` definition like this:
 
 ```powershell
 # Docker image variants' definitions
 $VARIANTS = @(
     # Our first variant
     @{
-        # The tag is the Docker Image tag.
-        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'perl' and 'git' templates
-        # will be processed.
-        tag = 'perl-git'
-        # Defining a distro is optional. If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if you do define a distro, variants will be generated in their respective distro folder, in this case, 'alpine'
+        # Specifies the docker image tag
+        # When the tag contains words delimited by '-', it known as component-chaining.
+        # E.g. 'curl' means only the 'curl.ps1' template will be processed.
+        # E.g. 'curl-git'  means the 'curl.ps1' and 'git.ps1' templates will be processed.
+        tag = 'curl'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
 
         # Our Build context definition
@@ -73,7 +92,7 @@ $VARIANTS = @(
             templates = @{
                 # We want to generate the file 'Dockerfile'
                 'Dockerfile' = @{
-                    # Specifies that the template file should not be shared among distros
+                    # Specifies that the template file is shared across distros
                     common = $false
                     passes = @(
                         # The first template-pass
@@ -88,35 +107,39 @@ $VARIANTS = @(
 }
 ```
 
-Using the `FILES.ps1` definition file is optional, but if used, at minimum it should look like:
+The `FILES.ps1` definition file is optional, but if used, at minimum it should look like:
 
 ```powershell
 # Files' definition
 $FILES = @(
+    # Paths are relative to the base of the project
     'README.md'
 )
 ```
 
-With these files, execute the following
-```powershell
-Generate-DockerImageVariants C:/my-variants-project`
+Upon generation, a file `/variants/alpine/curl/Dockerfile` is generated in the `curl` variant's build context in `/variants/alpine/curl`, as well as a file `/README.md`, both relative to the base of the project.
+
+```sh
+.
+├── README.md
+└── variants
+|   └── alpine
+|       └── curl
+|           └── Dockerfile
 ```
 
-This will produce a generated variant build context in `/variants/alpine/perl-git` and a file `README.md`, both at the base of the project.
-
-Two examples have been included in `examples` folder: one generates a simple repo with few variants, and the other generates a more complex repo with more variants.
+See the [`/examples/basic-distro`](examples/basic-distro) example.
 
 ## Customizing a Variant's Build Context file's generation
 
+Based on example located in [`/examples/basic-distro`](examples/basic-distro).
+
 This is the `buildContextFiles` property of the `$VARIANT` object. It includes these properties:
 
-- `common` - (Optional) Specifies whether this file is shared by all distros ( If yes, has to be present in `/generate/templates`. If not, has to be present in `/generate/templates/<file>/<distro>/` if there's a variant `distro` defined, or has to be present in  `/generate/templates/<file>/` if no variant `distro` is defined.)
-
-- `includeHeader` - (Optional) Specifies to include file called `<file>.header.ps1`. Location determined by `common`
-
-- `includeFooter` - (Optional) Specifies to include file called `<file>.footer.ps1`. Location determined by `common`
-
-- `passes` - (Mandatory) An array of passes that the template will go through. Each pass will generate a single file.
+- `common` - (Optional, defaults to `$false`) Specifies whether this file is shared by all distros ( If value is `$true`, template has to be present in `/generate/templates/<template>.ps1`. If value is `$false`, and if a variant `distro` is defined, it has to be present in `/generate/templates/<file>/<distro>/`, or if a variant `distro` is omitted, has to be present in  `/generate/templates/<template>/<template>.ps1`.)
+- `includeHeader` - (Optional, defaults to `$false`) Specifies to process a template `<file>.header.ps1`. Location determined by `common`
+- `includeFooter` - (Optional, defaults to `$false`) Specifies to iprocess a template `<file>.footer.ps1`. Location determined by `common`
+- `passes` - (Mandatory) An array of pass definitions that the template will undergo. Each pass will generate a single file.
 
 Each pass processes a `<file>.ps1` template and generates a single file. A pass can be configured with the `variables` and `generatedFileNameOverride` properties:
 
@@ -124,27 +147,35 @@ Each pass processes a `<file>.ps1` template and generates a single file. A pass 
 $VARIANTS = @(
     # Our first variant
     @{
-        tag = 'perl-git'
+        # Specifies the docker image tag
+        tag = 'curl'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
 
         buildContextFiles = @{
             templates = @{
+                # The path of the template to process, relative to the templates directory, omitting the '.ps1' extension
                 'Dockerfile' = @{
+                    # Specifies whether the template is common (shared) across distros
                     common = $false
+                    # Specifies a list of passes the template will be undergo, where each pass generates a file
                     passes = @(
                         # The first pass. The Generated file name will be 'Dockerfile'
                         @{
-                            # Customize the pass here
+                            # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                             variables = @{
                                 'foo' = 'bar'
                             }
+                            # The generated file will be 'Dockerfile'
                         }
                         # The second pass. The Generated file name will be 'Dockerfile.dev'
                         @{
-                            # Customize the pass here
+                            # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                             variables = @{
                                 'foo2' = 'bar2'
                             }
+                            # The generated file will be 'Dockerfile.dev'
                             generatedFileNameOverride = 'Dockerfile.dev'
                         }
                     )
@@ -157,11 +188,12 @@ $VARIANTS = @(
 
 During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of the processed `Dockerfile.ps1` template. For instance, in the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
 
-## Variables available during a template-pass (generation of a file)
+## Variables available during a template-pass (generation of a build context file)
 
 Each pass processes a `<file>.ps1` template and generates a single file. The following variables are available in the scope of the `<file>.ps1` file:
+
 - `$VARIANT` - the variant object
-- `$PASS_VARIABLES` - a hashtable containing the custom variables defined in the Variant's Build context template definition
+- `$PASS_VARIABLES` - a hashtable containing the custom variables defined in the Variant's Build context template pass definition
 
 ## Copy files instead of Template-passing
 
@@ -173,7 +205,9 @@ To copy a file, simply use the property `copies` in `buildContextFiles`:
 $VARIANTS = @(
     # Our first variant
     @{
-        tag = 'perl-git'
+        tag = 'curl-git'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
 
         buildContextFiles = @{
@@ -186,32 +220,36 @@ $VARIANTS = @(
 }
 ```
 
-This will copy all descending files/folders of the `/app` folder located relative to the *base* of the repository into the to-be-generated `perl-git` variant's build directory (`/variants/alpine/perl-git`) as `/variants/alpine/perl-git/app`.
+This will copy all descending files/folders of the `/app` folder located relative to the *base* of the repository into the to-be-generated `curl-git` variant's build directory (`/variants/alpine/curl-git`) as `/variants/alpine/curl-git/app`.
 
 ## Advanced: Generate a single variant with Component-chaining
 
-When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The result of processing each component template will be concatanated to form the final generated file. For instance, suppose you want a variant that generates a Dockerfile that installs `perl` and `git`, in `DEFINITIONS.ps1`:
+When a variant's `tag` contains words delimited by `-`, it known as **component-chaining**. The final generated file will be a concatanation of the product of processing the template of each component specified in this chain.
+
+For instance, suppose you want a variant that generates a `Dockerfile` that installs `curl` and `git`, in `DEFINITIONS.ps1`:
 
 ```powershell
 $VARIANTS = @(
     # Our first variant
     @{
-        # The tag is the Docker Image tag.
-        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'perl' and 'git' templates
-        # will be processed.
-        tag = 'perl-git'
+        # Specifies the docker image tag
+        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
+        tag = 'curl-git'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
 
         buildContextFiles = @{
             templates = @{
-                # We want to generate the file 'Dockerfile'
+                # The path of the template to process, relative to the templates directory, omitting the '.ps1' extension
                 'Dockerfile' = @{
-                    # Specifies that the template file should not be shared among distros
+                    # Specifies whether the template is common (shared) across distros
                     common = $false
+                    # Specifies a list of passes the template will be undergo, where each pass generates a file
                     passes = @(
-                        # The first template-pass
                         @{
-                            # Customize the pass here
+                            # These variables will be available in $PASS_VARIABLES hashtable when this template file is processed
+                            variables = @{}
                         }
                     )
                 }
@@ -222,16 +260,19 @@ $VARIANTS = @(
 )
 ```
 
-The template pass to generate `Dockerfile` proceeds as such:
+The template pass to generate the variant's build context `Dockerfile` proceeds as such:
+
 1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.header.ps1` is processed
-2. Now the files `/generate/templates//Dockerfile/alpine/perl/perl.ps1` and `/generate/templates/Dockerfile/alpine/git/git.ps1` are processed in the left-to-right order.
-3. The file `/generate/templates//Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
-**Note: If a variant's `tag` consist of a word that matches the variant's `distro`, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `perl-git-alpine`, there will still only be two components `perl` and `git`. `alpine` will not be considered a component. This will then allow variants to be tagged with the `distro` keyword without having to process a 'phantom' distro template file.
+1. Now the files `/generate/templates/Dockerfile/alpine/curl/curl.ps1` and `/generate/templates/Dockerfile/alpine/git/git.ps1` are processed, in the left-to-right order as specified in the chain
 
-Upon generation, **one** variant namely `perl-git` will have its build context generated in its corresponding folder, relative to the base of the project: `/variants/alpine/perl-git`
+1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
-See the `examples` folder of this module's repository for a real example.
+**Note: If a variant's `tag` consist of a word that matches the variant's `distro`, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `curl-git-alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component. This will then allow variants to be tagged with the `distro` keyword without having to process a 'phantom' distro template file.
+
+The file `/variants/alpine/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/alpine/curl-git`
+
+See the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) folder for a real example.
 
 ### Generate multiple variants
 
@@ -246,17 +287,29 @@ To generate multiple image variants, all sharing a common `buildContextFiles` te
 $VARIANTS = @(
     # Our first variant
     @{
-        tag = 'perl-git'
+        # Specifies the docker image tag
+        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
+        tag = 'curl-git'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
     }
     # Our second variant
     @{
-        tag = 'perl'
+        # Specifies the docker image tag
+        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
+        tag = 'curl'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
     }
     # Our third variant
     @{
+        # Specifies the docker image tag
+        # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
         tag = 'git'
+        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
     }
 }
@@ -266,14 +319,15 @@ $VARIANTS = @(
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
-            # We want to generate the file 'Dockerfile'
+            # The path of the template to process, relative to the templates directory, omitting the '.ps1' extension
             'Dockerfile' = @{
-                # Specifies that the template file should not be shared among distros
+                # Specifies whether the template is common (shared) across distros
                 common = $false
+                # Specifies a list of passes the template will be undergo, where each pass generates a file
                 passes = @(
-                    # The first template-pass
                     @{
-                        # Customize the pass here
+                        # These variables will be available in $PASS_VARIABLES hashtable when this template file is processed
+                        variables = @{}
                     }
                 )
             }
@@ -284,21 +338,30 @@ $VARIANTS_SHARED = @{
 
 Note that properties defined in the `$VARIANTS_SHARED` will override their corresponding local properties in the `$VARIANT` object.
 
-Upon generation, **three** variants namely `perl-git`, `perl`, and `git` will have their build contexts generated in their corresponding folders, relative to the base of the project:
+Upon generation, **three** variants build contexts for variants `curl-git`, `curl`, and `git` are generated:
 
-- `/variants/alpine/perl-git`
-- `/variants/alpine/perl`
-- `/variants/alpine/git`
+```sh
+.
+└── variants
+|   └── alpine
+|       └── curl-git
+|           └── Dockerfile
+|       └── curl
+|           └── Dockerfile
+|       └── git
+|           └── Dockerfile
+```
 
-See the `examples` folder of this module's repository for a real example.
+See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) folder of this module's repository for a real example.
 
 ## Optional: Generate repository files
 
-As described in the present repository's description, this module is able to generate a complete repository:
-1) the Docker Image variants which has been covered above
-2) other repository files.
+As described in the present repository's description, this module is able to generate, based on tempaltes, a complete repository consisting of:
 
-To generate the other repository files, first, define the `$FILES` array in the `FILES.ps1`file:
+1. variants build contexts
+2. other repository files unrelated to variants build contexts
+
+To populate a repository other repository files, first, define the `$FILES` array in the `FILES.ps1`file:
 
 ```powershell
 # Files' definition
@@ -310,15 +373,25 @@ $FILES = @(
 
 Next, create two template files in the `/generate/templates` directory:
 
-- `.gitlab-ci.yml.ps1`
-- `README.md.ps1`
+```sh
+.
+├── generate
+│   └── templates               # This is the templates folder.  with your templates (`.ps1` files) used for generating files according to your generation definitions
+│       ├── gitlab-ci.yml.ps1   # gitlab-ci.yml template (shared among variants across all distros)
+│       └── README.md.ps1       # README.md template
+```
 
 Now, the generation results in two files, relative to the base of the project:
 
-- `/.gitlab-ci.yml`
-- `/README.md`
+```sh
+.
+├── .gitlab-ci.yml
+└── .README.md
+```
 
 The variables `$VARIANTS` will be available during the processing of the template files `/generate/templates/.gitlab-ci.yml.ps1` and `/generate/templates/README.md.ps1`.
+
+See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) folder of this module's repository for a real example.
 
 ## Appendix
 
@@ -331,7 +404,7 @@ $VARIANT = @{
     # Variant Metadata
     tag = 'somecomponent1-somecomponent2-somedistro'
     distro = 'somedistro'
-    tag_as_latest = $true                                   # Automatically populated if unspecified
+    tag_as_latest = $true                                   # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
     tag_without_distro = 'somecomponent1-somecomponent2'    # Automatically populated
     components = @( 'somecomponent1'                        # Automatically populated
                     'somecomponent2' )
@@ -342,24 +415,32 @@ $VARIANT = @{
     buildContextFiles = @{
         templates = @{
             'Dockerfile' = @{
+                # Specifies whether the template is common (shared) across distros
                 common = $false     #
+                # Specifies whether the template <file>.header.ps1 will be processed. Useful for Dockerfiles
                 includeHeader = $true
+                # Specifies whether the template <file>.footer.ps1 will be processed. Useful for Dockerfiles
                 includeFooter = $true
+                # Specifies a list of passes the template will be undergo, where each pass generates a file
                 passes = @(
                     @{
+                        # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                         variables = @{
                             maintainer = 'foo'
                         }
                     }
                     @{
+                        # These variables will be available in $PASS_VARIABLES hashtable when this template is processed
                         variables = @{
                             foo = 'bar'
                         }
+                        # The name of the second file to generate
                         generatedFileNameOverride = 'Dockerfile.dev'
                     }
                 )
             }
         }
+        # Specifies the paths, relative to the root of the repository, to recursively copy into each variant's build context
         copies = @(
             '/app'
         )
@@ -377,7 +458,7 @@ To find out which part of your defintion is wrong, use the `-Verbose` switch. It
 $VARIANTS = @(
     1
     @{
-        tag = 'perl'
+        tag = 'curl'
         distro = 'alpine'
     }
 }
