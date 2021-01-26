@@ -28,15 +28,20 @@ PARAMETERS
 
 1. [Install](https://docs.microsoft.com/en-us/powershell/developer/module/installing-a-powershell-module#install-modules-in-psmodulepath) the `Generate-DockerImageVariants` Powershell Module
 
-1. Create templates in `/generate`.
+1. Initialize your repository.
 
-1. Generate the variants:
-
-    ```powershell
-    Generate-DockerImageVariants /path/to/my-repository
+    ```sh
+    mkdir -p /path/to/my-project
     ```
 
-1. Build contexts of variants are generated in `/variants`. The repository tree now looks like:
+1. Initialize the `/generate` folder
+
+    ```powershell
+    cd /path/to/my-project
+    Generate-DockerImageVariants . -Init
+    ```
+
+   Definition and template files are generated in the `/generate` folder.
 
     ```sh
     .
@@ -45,6 +50,32 @@ PARAMETERS
     │   │   ├── FILES.ps1
     │   │   └── VARIANTS.ps1
     │   └── templates
+    │       ├── .gitlab-ci.ps1
+    │       ├── Dockerfile.ps1
+    │       └── README.md.ps1
+    ```
+
+1. Edit the definitions and template files in `/generate`:
+
+1. Generate the variants:
+
+    ```powershell
+    cd /path/to/my-project
+    Generate-DockerImageVariants .
+    ```
+
+   Build contexts of variants are generated in `/variants`.
+
+   The repository tree now looks like:
+
+    ```sh
+    .
+    ├── generate
+    │   ├── definitions
+    │   │   ├── FILES.ps1
+    │   │   └── VARIANTS.ps1
+    │   └── templates
+    │       ├── .gitlab-ci.ps1
     │       ├── Dockerfile.ps1
     │       └── README.md.ps1
     ├── README.md
