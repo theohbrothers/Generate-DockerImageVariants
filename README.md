@@ -2,28 +2,6 @@
 
 A Powershell Module to easily generate a repository populated with Docker image variants.
 
-## Command line
-
-```powershell
-NAME
-    Generate-DockerImageVariants
-
-SYNTAX
-    Generate-DockerImageVariants [[-ProjectPath] <string>] [-Version]  [<CommonParameters>]
-
-
-PARAMETERS
-    -ProjectPath <string>
-
-    -Version
-
-    <CommonParameters>
-        This cmdlet supports the common parameters: Verbose, Debug,
-        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
-        OutBuffer, PipelineVariable, and OutVariable. For more information, see
-        about_CommonParameters (https://go.microsoft.com/fwlink/?LinkID=113216).
-```
-
 ## How to use
 
 1. [Install](https://docs.microsoft.com/en-us/powershell/developer/module/installing-a-powershell-module#install-modules-in-psmodulepath) the `Generate-DockerImageVariants` Powershell Module
