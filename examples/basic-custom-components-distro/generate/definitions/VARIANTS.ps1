@@ -2,45 +2,22 @@
 $VARIANTS = @(
     @{
         # Specifies the docker image tag
-        tag = 'curl-alpine'
+        tag = 'foo-curl-bar-alpine'
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
-        # components = @( 'foo' )
-    }
-    @{
-        # Specifies the docker image tag
-        tag = 'curl-git-alpine'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
-        distro = 'alpine'
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
-        # components = @( 'foo' )
+        components = @( 'curl' )
     }
 
     @{
         # Specifies the docker image tag
-        tag = 'curl-ubuntu'
+        tag = 'foo-curl-bar-ubuntu'
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'ubuntu'
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
-        # components = @( 'foo' )
-    }
-
-    @{
-        # Specifies the docker image tag
-        tag = 'curl-git-ubuntu'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
-        distro = 'ubuntu'
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
-        # components = @( 'foo' )
+        components = @( 'curl' )
     }
 )
 
@@ -53,8 +30,10 @@ $VARIANTS_SHARED = @{
             'Dockerfile' = @{
                 # Specifies whether the template is common (shared) across distros
                 common = $false
-                includeHeader = $true
-                includeFooter = $true
+                # Specifies whether the template <file>.header.ps1 will be processed. Useful for Dockerfiles
+                includeHeader = $false
+                # Specifies whether the template <file>.footer.ps1 will be processed. Useful for Dockerfiles
+                includeFooter = $false
                 # Specifies a list of passes the template will be undergo, where each pass generates a file
                 passes = @(
                     @{

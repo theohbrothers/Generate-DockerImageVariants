@@ -95,6 +95,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
 
         # Our Build context definition
         buildContextFiles = @{
@@ -161,6 +164,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
 
         buildContextFiles = @{
             templates = @{
@@ -218,6 +224,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
 
         buildContextFiles = @{
             # Specifies the paths, relative to the root of the repository, to recursively copy into each variant's build context
@@ -249,6 +258,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
 
         buildContextFiles = @{
             templates = @{
@@ -279,11 +291,16 @@ The template pass to generate the variant's build context `Dockerfile` proceeds 
 
 1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
-**Note: If a variant's `tag` consist of a word that matches the variant's `distro`, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `curl-git-alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component. This will then allow variants to be tagged with the `distro` keyword without having to process a 'phantom' distro template file.
-
 The file `/variants/alpine/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/alpine/curl-git`
 
 See the [`examples/basic-component-chaining`](examples/basic-component-chaining) example and the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
+
+**Note: If the variant's `tag` consist of a word that matches the variant's `distro`, like in the above example, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `curl-git-alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component.
+
+To specify that only certain components be processed, independent of the `tag` property, ensure to define the `components` property. See these examples:
+
+- [`examples/basic-custom-components`](examples/basic-custom-components) example.
+- [`examples/basic-custom-components-distro`](examples/basic-custom-components-distro) example.
 
 ## Advanced: Generation of a multiple variants' built context file(s) using Component-chaining
 
@@ -300,6 +317,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
     }
     # Our second variant
     @{
@@ -309,6 +329,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
     }
     # Our third variant
     @{
@@ -318,6 +341,9 @@ $VARIANTS = @(
         # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
         # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
         distro = 'alpine'
+        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+        # If unspecified, this is automatically populated
+        # components = @( 'foo' )
     }
 }
 
@@ -360,6 +386,11 @@ Upon generation, **three** variants build contexts for variants `curl-git`, `cur
 ```
 
 See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
+
+To specify that only certain components be processed, independent of the `tag` property, ensure to define the `components` property. See these examples:
+
+- [`examples/basic-custom-components`](examples/basic-custom-components) example.
+- [`examples/basic-custom-components-distro`](examples/basic-custom-components-distro) example.
 
 ## Optional: Generate other repository files
 
@@ -408,15 +439,24 @@ A `$VARIANT` definition will contain these properties.
 
 ```powershell
 $VARIANT = @{
-    # Variant Metadata
-    tag = 'somecomponent1-somecomponent2-somedistro'
+    # Specifies the docker image tag
+    # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
+    tag = 'somepackageversion-somecomponent1-somecomponent2-somedistro'
+    # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
+    # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
     distro = 'somedistro'
-    tag_as_latest = $true                                   # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
-    tag_without_distro = 'somecomponent1-somecomponent2'    # Automatically populated
-    components = @( 'somecomponent1'                        # Automatically populated
+    # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
+    tag_as_latest = $false
+    # Automatically populated
+    tag_without_distro = 'somecomponent1-somecomponent2'
+    # Specifies an list of components to process. If undefined, the components will be determined from the tag.
+    # If unspecified, this is automatically populated
+    components = @( 'somecomponent1'
                     'somecomponent2' )
-    build_dir_rel = './variants/distro/builddirectory'      # Automatically populated
-    build_dir = '/full/path/to/variants/distro/builddirectory'   # Automatically populated
+    # Automatically populated
+    build_dir_rel = './variants/distro/<tag_without_distro>'
+    # Automatically populated
+    build_dir = '/full/path/to/variants/distro/<tag_without_distro>'
 
     # Build context template definition
     buildContextFiles = @{
