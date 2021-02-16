@@ -40,16 +40,16 @@ function Get-ContextFileContent {
 
     $params = @{}
     if ( $Header ) {
-        Get-ContentFromTemplate -Path "$TemplateDirectory/$TemplateFile.header.ps1"
+        Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirectory, "$TemplateFile.header.ps1")
         $params['PrependNewLines'] = 2
     }
 
     if ( $SubTemplates -is [array] -and $SubTemplates.Count -gt 0) {
         $SubTemplates | % {
-            Get-ContentFromTemplate -Path "$TemplateDirectory/$_/$_.ps1" @params
+            Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirectory, $_, "$_.ps1") @params
         }
     }else {
-        Get-ContentFromTemplate -Path "$TemplateDirectory/$TemplateFile.ps1" @params
+        Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirector, "$TemplateFile.ps1") @params
     }
 
     if ( $Footer ) {
@@ -331,10 +331,10 @@ function Generate-DockerImageVariants {
                                                 }
                                             )
                     $VARIANT['build_dir_rel'] = if ( $VARIANT['distro'] ) {
-                                                "variants/$( $VARIANT['distro'] )/$( $VARIANT['tag_without_distro'] )"
-                                            }else {
-                                                "variants/$($VARIANT['tag'])"
-                                            }
+                                                    [IO.Path]::Combine( "variants", $VARIANT['distro'], $VARIANT['tag_without_distro'] )
+                                                }else {
+                                                    [IO.Path]::Combine( "variants", $VARIANT['tag'] )
+                                                }
                     $VARIANT['build_dir'] = Join-Path "$PROJECT_BASE_DIR" $VARIANT['build_dir_rel']
                 }
 
@@ -360,9 +360,9 @@ function Generate-DockerImageVariants {
                                                             $GENERATE_TEMPLATES_DIR
                                                         }else {
                                                             if ( $VARIANT['distro'] ) {
-                                                                "$GENERATE_TEMPLATES_DIR/$templateFile/$( $VARIANT['distro'] )"
+                                                                Join-Path (Join-Path $GENERATE_TEMPLATES_DIR $templateFile) $VARIANT['distro']
                                                             }else {
-                                                                "$GENERATE_TEMPLATES_DIR/$templateFile/"
+                                                                Join-Path $GENERATE_TEMPLATES_DIR $templateFile
                                                             }
                                                         }
                                     Header = if ( $templateFileConfig['includeHeader'] ) { $true } else { $false }
@@ -374,11 +374,11 @@ function Generate-DockerImageVariants {
                                     Footer = if ( $templateFileConfig['includeFooter'] ) { $true } else { $false }
                                 }
 
-                                $generatedFile = "$( $VARIANT['build_dir'] )/$templateFile"
+                                $generatedFile = Join-Path $VARIANT['build_dir'] $templateFile
                                 $templateFileConfig['passes'] | % {
                                     $pass = $_
                                     $templateObject['TemplatePassVariables'] = if ( $pass['variables'] ) { $pass['variables'] } else { @() }
-                                    $generatedFile = if ( $pass['generatedFileNameOverride'] ) { "$( $VARIANT['build_dir'] )/$( $pass['generatedFileNameOverride'] )" } else { $generatedFile }
+                                    $generatedFile = if ( $pass['generatedFileNameOverride'] ) { Join-Path $VARIANT['build_dir'] $pass['generatedFileNameOverride'] } else { $generatedFile }
                                     $generatedFileContent = Get-ContextFileContent @templateObject
                                     New-Item $generatedFile -ItemType File -Force > $null
                                     $generatedFileContent | Out-File $generatedFile -Encoding Utf8 -Force -NoNewline
@@ -394,7 +394,7 @@ function Generate-DockerImageVariants {
                                 if ($blob -match '^\/') {
                                     $fullPathBlob = Join-Path $PROJECT_BASE_DIR $blob
                                 }else {
-                                    $fullPathBlob = "$GENERATE_TEMPLATES_DIR/variants/$( $VARIANT['tag'] )/$blob"
+                                    $fullPathBlob = [IO.Path]::Combine($GENERATE_TEMPLATES_DIR, 'variants', $VARIANT['tag'], $blob)
                                 }
                                 Copy-Item -Path $fullPathBlob -Destination $VARIANT['build_dir'] -Force -Recurse
                             }
@@ -405,7 +405,7 @@ function Generate-DockerImageVariants {
 
                 # Generate other repo files. E.g. README.md
                 foreach ($file in $FILES) {
-                    $fileAbsolutePath = [io.path]::Combine($PROJECT_BASE_DIR, $file)
+                    $fileAbsolutePath = [IO.Path]::Combine($PROJECT_BASE_DIR, $file)
                     $fileParentAbsolutePath = Split-Path $fileAbsolutePath -Parent
                     if ( ! (Test-Path $fileParentAbsolutePath -PathType Container) ) {
                         New-Item $fileParentAbsolutePath -ItemType Directory -Force > $null
