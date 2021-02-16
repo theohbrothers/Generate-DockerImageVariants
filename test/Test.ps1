@@ -103,6 +103,14 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
+        It 'Should generate files for exmaple: basic-component-chaining' {
+            {
+                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-component-chaining'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+
         It 'Should generate files for exmaple: basic-distro-variables' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro-variables'
