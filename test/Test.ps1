@@ -87,7 +87,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 2
         }
 
-        It 'Should generate files for exmaple: basic' {
+        It 'Should generate files for example: basic' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic'
 
@@ -95,7 +95,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-distro' {
+        It 'Should generate files for example: basic-distro' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro'
 
@@ -103,7 +103,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-component-chaining' {
+        It 'Should generate files for example: basic-component-chaining' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-component-chaining'
 
@@ -111,7 +111,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-distro-variables' {
+        It 'Should generate files for example: basic-distro-variables' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro-variables'
 
@@ -119,7 +119,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-distro-component-chaining' {
+        It 'Should generate files for example: basic-distro-component-chaining' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro-component-chaining'
 
@@ -127,7 +127,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-custom-components' {
+        It 'Should generate files for example: basic-custom-components' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components'
 
@@ -135,7 +135,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: basic-custom-components-distro' {
+        It 'Should generate files for example: basic-custom-components-distro' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components-distro'
 
@@ -143,7 +143,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
-        It 'Should generate files for exmaple: advanced-component-chaining-copies-variables' {
+        It 'Should generate files for example: advanced-component-chaining-copies-variables' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'advanced-component-chaining-copies-variables'
 
