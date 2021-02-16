@@ -119,6 +119,22 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             } | Should -Not -Throw
         }
 
+        It 'Should generate files for exmaple: basic-custom-components' {
+            {
+                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+
+        It 'Should generate files for exmaple: basic-custom-components-distro' {
+            {
+                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components-distro'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+
         It 'Should generate files for exmaple: advanced-component-chaining-copies-variables' {
             {
                 $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'advanced-component-chaining-copies-variables'
