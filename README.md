@@ -283,7 +283,7 @@ The template pass to generate the variant's build context `Dockerfile` proceeds 
 
 The file `/variants/alpine/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/alpine/curl-git`
 
-See the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
+See the [`examples/basic-component-chaining`](examples/basic-component-chaining) example and the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
 
 ## Advanced: Generation of a multiple variants' built context file(s) using Component-chaining
 
