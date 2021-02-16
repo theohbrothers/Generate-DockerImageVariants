@@ -324,7 +324,11 @@ function Generate-DockerImageVariants {
                                                     }
                     # Dynamically determine the components from the tag of the variant. (E.g. 'foo-bar' have 2 componets: 'foo' and 'bar')
                     $VARIANT['components'] = @(
-                                                $VARIANT['tag_without_distro'] -split '-' | % { $_.Trim() } | ? { $_ }
+                                                if ($null -ne $VARIANT['components']) {
+                                                    $VARIANT['components']
+                                                }else {
+                                                    $VARIANT['tag_without_distro'] -split '-' | % { $_.Trim() } | ? { $_ }
+                                                }
                                             )
                     $VARIANT['build_dir_rel'] = if ( $VARIANT['distro'] ) {
                                                 "variants/$( $VARIANT['distro'] )/$( $VARIANT['tag_without_distro'] )"
@@ -363,9 +367,10 @@ function Generate-DockerImageVariants {
                                                         }
                                     Header = if ( $templateFileConfig['includeHeader'] ) { $true } else { $false }
                                     # Dynamically determine the sub templates from the name of the variant. (E.g. 'foo-bar' will comprise of foo and bar variant sub templates for this template file)
-                                    SubTemplates =  if ( ! $templateFileConfig['common'] ) {
+                                    SubTemplates =  @(
+                                                        if ( ! $templateFileConfig['common'] ) {
                                                         $VARIANT['components']
-                                                    }else { @() }
+                                                    }else {  })
                                     Footer = if ( $templateFileConfig['includeFooter'] ) { $true } else { $false }
                                 }
 
