@@ -315,7 +315,7 @@ function Generate-DockerImageVariants {
                                                         # E.g. ':git-perl-alpine' or 'alpine-git-perl' becomes ':git-perl'
                                                         $variant_distro_regex = [regex]::Escape( $VARIANT['distro'] )
                                                         if ( $VARIANT['tag'] -match "^(.*)$variant_distro_regex(.*)$" ) {
-                                                            "$( $matches[1] )-$( $matches[2] )".Trim('-')
+                                                            "$( $matches[1].Trim('-') )-$( $matches[2].Trim('-') )".Trim('-')
                                                         }else {
                                                             $VARIANT['tag']
                                                         }
