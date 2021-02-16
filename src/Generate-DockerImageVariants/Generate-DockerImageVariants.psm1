@@ -339,7 +339,6 @@ function Generate-DockerImageVariants {
                     $VARIANT = $_
 
                     "Generating variant of name $( $VARIANT['tag'] ), variant dir: $( $VARIANT['build_dir'] )" | Write-Host -ForegroundColor Green
-                    "Generating variant of name $( $VARIANT['tag'] ), variant dir: $( $VARIANT['build_dir'] )" | Write-Host -ForegroundColor Green
                     if ( ! (Test-Path $VARIANT['build_dir']) ) {
                         New-Item -Path $VARIANT['build_dir'] -ItemType Directory -Force > $null
                     }
