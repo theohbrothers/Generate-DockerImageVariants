@@ -1,6 +1,8 @@
 # basic-distro
 
-| Tags |
-|:-------:| 
-| `:curl-alpine` | 
-| `:curl-ubuntu` |
+## Tags
+
+| Tag | Dockerfile Build Context |
+|:-------:|:---------:|
+| `:curl-alpine`, `:latest` | [View](variants/curl-alpine ) |
+| `:curl-ubuntu` | [View](variants/curl-ubuntu ) |

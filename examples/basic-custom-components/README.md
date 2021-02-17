@@ -1,5 +1,7 @@
 # basic-custom-components
 
-| Tags |
-|:-------:| 
-| `:foo-curl-bar` |
+## Tags
+
+| Tag | Dockerfile Build Context |
+|:-------:|:---------:|
+| `:foo-curl-bar` | [View](variants/foo-curl-bar ) |
