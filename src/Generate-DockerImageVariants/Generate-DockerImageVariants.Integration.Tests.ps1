@@ -1,14 +1,11 @@
-$PSDefaultParameterValues['New-Item:Force'] = $true
-$PSDefaultParameterValues['Get-Item:Force'] = $true
-$PROJECT_DIR = Split-Path $PSScriptRoot -Parent
-Get-Module Generate-DockerImageVariants | Remove-Module -Force
-Import-Module ( Join-Path ( Join-Path ( Join-Path $PROJECT_DIR 'src' ) 'Generate-DockerImageVariants' ) 'Generate-DockerImageVariants.psm1' ) -Force 3>$null
+$PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
 
-# Generate examples
-Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
+Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
+
+    $PSDefaultParameterValues['New-Item:Force'] = $true
+    $PSDefaultParameterValues['Get-Item:Force'] = $true
 
     Context 'Parameters' {
-
         It 'Outputs version' {
             $versionRegex = 'v\d\.\d\.\d+'
 
@@ -36,7 +33,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             $testProjectGenerateTemplatesReadmeMd =  Join-Path $testProjectGenerateTemplatesDir 'README.md.ps1'
             $testProjectGenerateTemplatesGitlabCiYml =  Join-Path $testProjectGenerateTemplatesDir '.gitlab-ci.yml.ps1'
 
-            Generate-DockerImageVariants -Init -ProjectPath $testProjectDir > $null
+            Generate-DockerImageVariants -Init -ProjectPath $testProjectDir 6>&1 > $null
 
             $testProjectGenerateDir | Get-Item | Should -BeOfType [System.IO.DirectoryInfo]
             $testProjectGenerateDefinitionsDir | Get-Item | Should -BeOfType [System.IO.DirectoryInfo]
@@ -50,7 +47,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             $testProjectGenerateTemplatesGitlabCiYml | Get-Item | Should -BeOfType [System.IO.FileInfo]
 
             # Cleanup
-            Remove-Item $testProjectDir -Recurse -Force
+            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
         It 'Does not override existing files in the /generate directory' {
@@ -85,6 +82,9 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration tests' {
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating definition file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Not creating template file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 2
+
+            # Cleanup
+            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
         It 'Should generate files for example: basic' {
