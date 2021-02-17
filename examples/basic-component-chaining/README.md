@@ -1,5 +1,7 @@
 # basic
 
-| Tags |
-|:-------:| 
-| `:curl-git` |
+## Tags
+
+| Tag | Dockerfile Build Context |
+|:-------:|:---------:|
+| `:curl-git` | [View](variants/curl-git ) |

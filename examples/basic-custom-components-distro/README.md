@@ -1,6 +1,8 @@
 # basic-custom-components-distro
 
-| Tags |
-|:-------:| 
-| `:foo-curl-bar-alpine` | 
-| `:foo-curl-bar-ubuntu` |
+## Tags
+
+| Tag | Dockerfile Build Context |
+|:-------:|:---------:|
+| `:foo-curl-bar-alpine`, `:latest` | [View](variants/foo-curl-bar-alpine ) |
+| `:foo-curl-bar-ubuntu` | [View](variants/foo-curl-bar-ubuntu ) |
