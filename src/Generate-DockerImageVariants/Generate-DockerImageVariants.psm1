@@ -40,20 +40,20 @@ function Get-ContextFileContent {
 
     $params = @{}
     if ( $Header ) {
-        Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirectory, "$TemplateFile.header.ps1")
+        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.header.ps1"))
         $params['PrependNewLines'] = 2
     }
 
     if ( $SubTemplates -is [array] -and $SubTemplates.Count -gt 0) {
         $SubTemplates | % {
-            Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirectory, $_, "$_.ps1") @params
+            Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, $_, "$_.ps1")) @params
         }
     }else {
-        Get-ContentFromTemplate -Path [IO.Path]::Combine($TemplateDirector, "$TemplateFile.ps1") @params
+        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.ps1")) @params
     }
 
     if ( $Footer ) {
-        Get-ContentFromTemplate -Path "$TemplateDirectory/$TemplateFile.footer.ps1" @params
+        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.footer.ps1")) @params
     }
 }
 
