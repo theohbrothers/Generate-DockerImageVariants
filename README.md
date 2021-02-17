@@ -379,13 +379,12 @@ Upon generation, **three** variants build contexts for variants `curl-git`, `cur
 ```sh
 .
 └── variants
-|   └── alpine
-|       └── curl-git
-|           └── Dockerfile
-|       └── curl
-|           └── Dockerfile
-|       └── git
-|           └── Dockerfile
+|   └── curl-git
+|       └── Dockerfile
+|   └── curl
+|       └── Dockerfile
+|   └── git
+|       └── Dockerfile
 ```
 
 See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
