@@ -63,11 +63,11 @@ build-foo-curl-bar-alpine:
   variables:
     VARIANT_TAG: foo-curl-bar-alpine
     VARIANT_TAG_WITH_VERSION: foo-curl-bar-alpine-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/foo-curl-bar
+    VARIANT_BUILD_DIR: variants/foo-curl-bar-alpine
 
 build-foo-curl-bar-ubuntu:
   <<: *build_definition
   variables:
     VARIANT_TAG: foo-curl-bar-ubuntu
     VARIANT_TAG_WITH_VERSION: foo-curl-bar-ubuntu-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/ubuntu/foo-curl-bar
+    VARIANT_BUILD_DIR: variants/foo-curl-bar-ubuntu

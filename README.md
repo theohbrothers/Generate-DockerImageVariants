@@ -62,7 +62,7 @@ A Powershell Module to easily generate a repository populated with Docker image 
     │       └── README.md.ps1
     ├── README.md
     └── variants
-        └── alpine
+        └── some-tag-of-variant
             └── Dockerfile
     ```
 
@@ -96,8 +96,8 @@ $VARIANTS = @(
         # E.g. 'curl' means only the 'curl.ps1' template will be processed.
         # E.g. 'curl-git'  means the 'curl.ps1' and 'git.ps1' templates will be processed.
         tag = 'curl'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -133,15 +133,14 @@ $FILES = @(
 )
 ```
 
-Upon generation, a file `/variants/alpine/curl/Dockerfile` is generated in the `curl` variant's build context in `/variants/alpine/curl`, as well as a file `/README.md`, both relative to the base of the project.
+Upon generation, a file `/variants/curl/Dockerfile` is generated in the `curl` variant's build context in `/variants/curl`, as well as a file `/README.md`, both relative to the base of the project.
 
 ```sh
 .
 ├── README.md
 └── variants
-|   └── alpine
-|       └── curl
-|           └── Dockerfile
+|   └── curl
+|       └── Dockerfile
 ```
 
 See the [`/examples/basic-distro`](examples/basic-distro) example.
@@ -165,8 +164,8 @@ $VARIANTS = @(
     @{
         # Specifies the docker image tag
         tag = 'curl'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -225,8 +224,8 @@ $VARIANTS = @(
     # Our first variant
     @{
         tag = 'curl'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -242,7 +241,7 @@ $VARIANTS = @(
 }
 ```
 
-This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/alpine/curl` as `/variants/alpine/curl/app`.
+This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/curl` as `/variants/curl/app`.
 
 See the [`examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
 
@@ -259,8 +258,8 @@ $VARIANTS = @(
         # Specifies the docker image tag
         # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
         tag = 'curl-git'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -295,7 +294,7 @@ The template pass to generate the variant's build context `Dockerfile` proceeds 
 
 1. The file `/generate/templates/Dockerfile/alpine/Dockerfile.footer.ps1` is processed
 
-The file `/variants/alpine/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/alpine/curl-git`
+The file `/variants/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/curl-git`
 
 See the [`examples/basic-component-chaining`](examples/basic-component-chaining) example and the [`examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
 
@@ -318,8 +317,8 @@ $VARIANTS = @(
         # Specifies the docker image tag
         # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
         tag = 'curl-git'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -330,8 +329,8 @@ $VARIANTS = @(
         # Specifies the docker image tag
         # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
         tag = 'curl'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -342,8 +341,8 @@ $VARIANTS = @(
         # Specifies the docker image tag
         # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
         tag = 'git'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -446,8 +445,8 @@ $VARIANT = @{
     # Specifies the docker image tag
     # When the tag contains words delimited by '-', it known as component-chaining. This means the 'curl' and 'git' templates will be processed.
     tag = 'somepackageversion-somecomponent1-somecomponent2-somedistro'
-    # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-    # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+    # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+    # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
     distro = 'somedistro'
     # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
     tag_as_latest = $false

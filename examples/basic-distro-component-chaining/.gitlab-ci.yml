@@ -63,25 +63,25 @@ build-curl-alpine:
   variables:
     VARIANT_TAG: curl-alpine
     VARIANT_TAG_WITH_VERSION: curl-alpine-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/curl
+    VARIANT_BUILD_DIR: variants/curl-alpine
 
 build-curl-git-alpine:
   <<: *build_definition
   variables:
     VARIANT_TAG: curl-git-alpine
     VARIANT_TAG_WITH_VERSION: curl-git-alpine-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/curl-git
+    VARIANT_BUILD_DIR: variants/curl-git-alpine
 
 build-curl-ubuntu:
   <<: *build_definition
   variables:
     VARIANT_TAG: curl-ubuntu
     VARIANT_TAG_WITH_VERSION: curl-ubuntu-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/ubuntu/curl
+    VARIANT_BUILD_DIR: variants/curl-ubuntu
 
 build-curl-git-ubuntu:
   <<: *build_definition
   variables:
     VARIANT_TAG: curl-git-ubuntu
     VARIANT_TAG_WITH_VERSION: curl-git-ubuntu-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/ubuntu/curl-git
+    VARIANT_BUILD_DIR: variants/curl-git-ubuntu

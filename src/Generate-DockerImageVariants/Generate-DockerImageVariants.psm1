@@ -330,11 +330,7 @@ function Generate-DockerImageVariants {
                                                     $VARIANT['tag_without_distro'] -split '-' | % { $_.Trim() } | ? { $_ }
                                                 }
                                             )
-                    $VARIANT['build_dir_rel'] = if ( $VARIANT['distro'] ) {
-                                                    [IO.Path]::Combine( "variants", $VARIANT['distro'], $VARIANT['tag_without_distro'] )
-                                                }else {
-                                                    [IO.Path]::Combine( "variants", $VARIANT['tag'] )
-                                                }
+                    $VARIANT['build_dir_rel'] = [IO.Path]::Combine( "variants", $VARIANT['tag'] )
                     $VARIANT['build_dir'] = Join-Path "$PROJECT_BASE_DIR" $VARIANT['build_dir_rel']
                 }
 

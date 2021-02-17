@@ -3,8 +3,8 @@ $VARIANTS = @(
     @{
         # Specifies the docker image tag
         tag = 'foo-curl-bar-alpine'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'alpine'
         # Specifies an list of components to process. If undefined, the components will be determined from the tag.
         # If unspecified, this is automatically populated
@@ -14,8 +14,8 @@ $VARIANTS = @(
     @{
         # Specifies the docker image tag
         tag = 'foo-curl-bar-ubuntu'
-        # Specifies a distro (optional). If you dont define a distro, you assume all your variants use the same distro.
-        # In contrast, if a distro is specified, variants will be generated in their respective distro folder, in this case, '/variants/alpine'
+        # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
+        # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = 'ubuntu'
         components = @( 'curl' )
     }
