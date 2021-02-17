@@ -63,39 +63,39 @@ build-perl:
   variables:
     VARIANT_TAG: perl
     VARIANT_TAG_WITH_VERSION: perl-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/perl
+    VARIANT_BUILD_DIR: variants/perl
 
 build-python:
   <<: *build_definition
   variables:
     VARIANT_TAG: python
     VARIANT_TAG_WITH_VERSION: python-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/python
+    VARIANT_BUILD_DIR: variants/python
 
 build-git:
   <<: *build_definition
   variables:
     VARIANT_TAG: git
     VARIANT_TAG_WITH_VERSION: git-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/git
+    VARIANT_BUILD_DIR: variants/git
 
 build-perl-git:
   <<: *build_definition
   variables:
     VARIANT_TAG: perl-git
     VARIANT_TAG_WITH_VERSION: perl-git-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/perl-git
+    VARIANT_BUILD_DIR: variants/perl-git
 
 build-python-git:
   <<: *build_definition
   variables:
     VARIANT_TAG: python-git
     VARIANT_TAG_WITH_VERSION: python-git-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/python-git
+    VARIANT_BUILD_DIR: variants/python-git
 
 build-perl-python-git:
   <<: *build_definition
   variables:
     VARIANT_TAG: perl-python-git
     VARIANT_TAG_WITH_VERSION: perl-python-git-$CI_COMMIT_REF_NAME
-    VARIANT_BUILD_DIR: variants/alpine/perl-python-git
+    VARIANT_BUILD_DIR: variants/perl-python-git
