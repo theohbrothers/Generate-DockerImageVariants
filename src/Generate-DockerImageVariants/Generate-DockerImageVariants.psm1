@@ -2,12 +2,15 @@ $GENERATE_DOCKERIMAGEVARIANTS_VERSION = 'v0.2.0'
 function Get-ContentFromTemplate {
     param (
         [ValidateNotNullOrEmpty()]
-        [ValidateScript({ Test-Path $_ })]
         [string]$Path
     ,
         [ValidateRange(1,100)]
         [int]$PrependNewLines
     )
+    if (! (Test-Path $Path -PathType Leaf) ) {
+        throw "No such file: $Path"
+    }
+
     $content = & $Path
     if ($PrependNewLines -gt 0) {
         1..($PrependNewLine) | % {
@@ -23,7 +26,6 @@ function Get-ContextFileContent {
         [string]$TemplateFile
     ,
         [ValidateNotNullOrEmpty()]
-        [ValidateScript({ Test-Path $_ })]
         [string]$TemplateDirectory
     ,
         [switch]$Header
@@ -34,6 +36,10 @@ function Get-ContextFileContent {
     ,
         [hashtable]$TemplatePassVariables
     )
+
+    if (! (Test-Path $TemplateDirectory -PathType Container) ) {
+        throw "No such template directory: $TemplateDirectory"
+    }
 
     # This special variable will be used throughout templates
     $PASS_VARIABLES = if ($TemplatePassVariables) { $TemplatePassVariables } else { @{} }
@@ -404,6 +410,9 @@ function Generate-DockerImageVariants {
                                     $fullPathBlob = [IO.Path]::Combine($GENERATE_TEMPLATES_DIR, 'variants', $VARIANT['tag'], $blob)
                                 }
                                 "Copying file(s) into build context from: $fullPathBlob" | Write-Verbose
+                                if (! (Test-Path $fullPathBlob) ) {
+                                    throw "No such file or folder: $fullPathBlob"
+                                }
                                 Copy-Item -Path $fullPathBlob -Destination $VARIANT['build_dir'] -Force -Recurse
                             }
                         }
