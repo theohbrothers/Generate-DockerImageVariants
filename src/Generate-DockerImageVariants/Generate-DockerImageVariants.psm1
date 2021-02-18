@@ -414,11 +414,17 @@ function Generate-DockerImageVariants {
                 # Generate other repo files. E.g. README.md
                 foreach ($file in $FILES) {
                     $fileAbsolutePath = [IO.Path]::Combine($PROJECT_BASE_DIR, $file)
+                    "Generating repository file: $fileAbsolutePath" | Write-Host -ForegroundColor Green
+
                     $fileParentAbsolutePath = Split-Path $fileAbsolutePath -Parent
                     if ( ! (Test-Path $fileParentAbsolutePath -PathType Container) ) {
                         New-Item $fileParentAbsolutePath -ItemType Directory -Force > $null
                     }
-                    Get-ContentFromTemplate -Path (Join-Path $GENERATE_TEMPLATES_DIR "$file.ps1") | Out-File $fileAbsolutePath -Encoding utf8 -NoNewline
+
+                    $templateFileAbsolutePath = Join-Path $GENERATE_TEMPLATES_DIR "$file.ps1"
+                    "Processing template file: $templateFileAbsolutePath" | Write-Verbose
+
+                    Get-ContentFromTemplate -Path $templateFileAbsolutePath | Out-File $fileAbsolutePath -Encoding utf8 -NoNewline
                 }
             }
         }catch {
