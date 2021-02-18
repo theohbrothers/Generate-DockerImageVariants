@@ -497,11 +497,18 @@ $VARIANT = @{
 }
 ```
 
-### Debugging the variants / file definitions
+### Debugging
 
-If any definitions in `/generate/definitions/VARIANTS.ps1` or `/generate/definitions/FILES.ps1` are incorrect, the module will throw a terminating error.
+Use the `-Verbose` switch. This gives a detail trace of:
 
-To find out which part of your defintion is wrong, use the `-Verbose` switch. It gives a trace of the validation steps, for instance, if a variant was defined with an incorrect type (expected to be `hashtable`):
+- Validation of `$VARIANTS`
+- Validation of `$FILES`
+- Template files or to-be-copied repository files for the build context generation
+- Template files for repository files generation
+
+#### Validation of `$VARIANTS` and `$FILES` definitions
+
+For instance, if a variant was defined with an incorrect type (expected to be `hashtable`):
 
 ```powershell
 $VARIANTS = @(
@@ -513,13 +520,42 @@ $VARIANTS = @(
 }
 ```
 
-the validation trace will be like this:
+Example of a validation trace:
 
 ```powershell
-Generate-DockerImageVariants C:/my-variants-project -Verbose
+PS > cd /path/to/my-repo
+PS > Generate-DockerImageVariants . -Verbose
+VERBOSE: Validating $VARIANTS definition
 VERBOSE: Validating TargetObject '1 System.Collections.Hashtable System.Collections.Hashtable System.Collections.Hashtable System.Collections.Hashtable System.Collections.Hashtable System.Collections.Hashtable' of type 'Object[]' and basetype 'array'       against Prototype 'System.Collections.Hashtable' of type 'Object[]' and basetype 'array'
 VERBOSE:        Validating TargetObject '1' of type 'Int32' and basetype 'System.ValueType'             against Prototype 'System.Collections.Hashtable' of type 'Hashtable' and basetype 'System.Object'
 WARNING: Failed with errors. Exception: Type System.Int32 is invalid! It should be of type 'System.Collections.Hashtable'.
 ```
 
 This demonstrates that a variant definition has to be of type `hashtable`. The value `1` is of type `int32`, and hence is invalid.
+
+#### Validation of template files or to-be-copied files
+
+Example of a validation trace:
+
+```powershell
+PS > cd /path/to/my-repo
+PS > Generate-DockerImageVariants . -Init
+PS > Generate-DockerImageVariants . -Verbose
+VERBOSE: Validating $VARIANTS definition
+...
+VERBOSE: Validating $FILES definition
+...
+Generating build context of variant 'curl': /path/to/my-repo/variants/curl
+VERBOSE: Generating build context file: /path/to/my-repo/variants/curl/Dockerfile
+VERBOSE: Processing template file: /path/to/my-repo/generate/templates/Dockerfile.ps1
+Generating build context of variant 'curl-git': /path/to/my-repo/variants/curl-git
+VERBOSE: Generating build context file: /path/to/my-repo/variants/curl-git/Dockerfile
+VERBOSE: Processing template file: /path/to/my-repo/generate/templates/Dockerfile.ps1
+Generating build context of variant 'my-cool-variant': /path/to/my-repo/variants/my-cool-variant
+VERBOSE: Generating build context file: /path/to/my-repo/variants/my-cool-variant/Dockerfile
+VERBOSE: Processing template file: /path/to/my-repo/generate/templates/Dockerfile.ps1
+Generating repository file: /path/to/my-repo/.gitlab-ci.yml
+VERBOSE: Processing template file: /path/to/my-repo/generate/templates/.gitlab-ci.yml.ps1
+Generating repository file: /path/to/my-repo/README.md
+VERBOSE: Processing template file: /path/to/my-repo/generate/templates/README.md.ps1
+```
