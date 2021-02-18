@@ -501,10 +501,12 @@ $VARIANT = @{
 
 Use the `-Verbose` switch. This gives a detail trace of:
 
-- Validation of `$VARIANTS`
-- Validation of `$FILES`
+- Validation of `$VARIANTS` definition
+- Validation of `$FILES` definition
 - Template files or to-be-copied repository files for the build context generation
 - Template files for repository files generation
+
+This is particularly useful when the module is throwing errors about definitions, or about missing template or to-be-copied files.
 
 #### Validation of `$VARIANTS` and `$FILES` definitions
 
