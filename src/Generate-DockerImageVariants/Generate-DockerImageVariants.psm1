@@ -295,8 +295,10 @@ function Generate-DockerImageVariants {
                 $FILES = if ( $FILES -isnot [array] ) { ,@() } else { ,$FILES }
 
                 # Validate the VARIANTS and FILES defintion objects
+                "Validating `$VARIANTS definition" | Write-Verbose
                 Validate-Object -Prototype $VARIANTS_PROTOTYPE -TargetObject $VARIANTS -Mandatory:$false
                 if ($FILES) {
+                    "Validating `$FILES definition" | Write-Verbose
                     Validate-Object -Prototype $FILES_PROTOTYPE -TargetObject $FILES -Mandatory:$false
                 }
 
@@ -338,7 +340,6 @@ function Generate-DockerImageVariants {
                 $VARIANTS | % {
                     $VARIANT = $_
 
-                    "Generating variant of name $( $VARIANT['tag'] ), variant dir: $( $VARIANT['build_dir'] )" | Write-Host -ForegroundColor Green
                     if ( ! (Test-Path $VARIANT['build_dir']) ) {
                         New-Item -Path $VARIANT['build_dir'] -ItemType Directory -Force > $null
                     }
