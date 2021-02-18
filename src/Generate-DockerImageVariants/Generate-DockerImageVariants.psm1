@@ -403,6 +403,7 @@ function Generate-DockerImageVariants {
                                 }else {
                                     $fullPathBlob = [IO.Path]::Combine($GENERATE_TEMPLATES_DIR, 'variants', $VARIANT['tag'], $blob)
                                 }
+                                "Copying file(s) into build context from: $fullPathBlob" | Write-Verbose
                                 Copy-Item -Path $fullPathBlob -Destination $VARIANT['build_dir'] -Force -Recurse
                             }
                         }
