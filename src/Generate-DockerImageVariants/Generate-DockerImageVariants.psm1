@@ -40,20 +40,28 @@ function Get-ContextFileContent {
 
     $params = @{}
     if ( $Header ) {
-        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.header.ps1"))
+        $templateFileAbsolutePath = [IO.Path]::Combine($TemplateDirectory, "$TemplateFile.header.ps1")
+        "Processing template file: $templateFileAbsolutePath" | Write-Verbose
+        Get-ContentFromTemplate -Path $templateFileAbsolutePath
         $params['PrependNewLines'] = 2
     }
 
     if ( $SubTemplates -is [array] -and $SubTemplates.Count -gt 0) {
         $SubTemplates | % {
-            Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, $_, "$_.ps1")) @params
+            $templateFileAbsolutePath = [IO.Path]::Combine($TemplateDirectory, $_, "$_.ps1")
+            "Processing template file: $templateFileAbsolutePath" | Write-Verbose
+            Get-ContentFromTemplate -Path $templateFileAbsolutePath @params
         }
     }else {
-        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.ps1")) @params
+        $templateFileAbsolutePath = [IO.Path]::Combine($TemplateDirectory, "$TemplateFile.ps1")
+        "Processing template file: $templateFileAbsolutePath" | Write-Verbose
+        Get-ContentFromTemplate -Path $templateFileAbsolutePath @params
     }
 
     if ( $Footer ) {
-        Get-ContentFromTemplate -Path ([IO.Path]::Combine($TemplateDirectory, "$TemplateFile.footer.ps1")) @params
+        $templateFileAbsolutePath = [IO.Path]::Combine($TemplateDirectory, "$TemplateFile.footer.ps1")
+        "Processing template file: $templateFileAbsolutePath" | Write-Verbose
+        Get-ContentFromTemplate -Path $templateFileAbsolutePath @params
     }
 }
 
@@ -340,6 +348,7 @@ function Generate-DockerImageVariants {
                 $VARIANTS | % {
                     $VARIANT = $_
 
+                    "Generating build context of variant '$( $VARIANT['tag'] )': $( $VARIANT['build_dir'] )" | Write-Host -ForegroundColor Green
                     if ( ! (Test-Path $VARIANT['build_dir']) ) {
                         New-Item -Path $VARIANT['build_dir'] -ItemType Directory -Force > $null
                     }
@@ -376,6 +385,7 @@ function Generate-DockerImageVariants {
                                     $pass = $_
                                     $templateObject['TemplatePassVariables'] = if ( $pass['variables'] ) { $pass['variables'] } else { @() }
                                     $generatedFile = if ( $pass['generatedFileNameOverride'] ) { Join-Path $VARIANT['build_dir'] $pass['generatedFileNameOverride'] } else { $generatedFile }
+                                    "Generating build context file: $generatedFile" | Write-Verbose
                                     $generatedFileContent = Get-ContextFileContent @templateObject
                                     New-Item $generatedFile -ItemType File -Force > $null
                                     $generatedFileContent | Out-File $generatedFile -Encoding Utf8 -Force -NoNewline
