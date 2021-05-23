@@ -1,6 +1,10 @@
-$PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
+
 
 Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
+
+    $PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
+    $DOCS_DIR = Join-Path $PROJECT_DIR 'docs'
+    $DOCS_EXAMPLES_DIR = Join-Path $DOCS_DIR 'examples'
 
     $PSDefaultParameterValues['New-Item:Force'] = $true
     $PSDefaultParameterValues['Get-Item:Force'] = $true
@@ -89,7 +93,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -97,7 +101,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-distro' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -105,7 +109,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-component-chaining' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-component-chaining'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-component-chaining'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -113,7 +117,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-distro-variables' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro-variables'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-variables'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -121,7 +125,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-distro-component-chaining' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-distro-component-chaining'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-component-chaining'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -129,7 +133,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-custom-components' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-custom-components'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -137,7 +141,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: basic-custom-components-distro' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'basic-custom-components-distro'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-custom-components-distro'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
@@ -145,7 +149,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
         It 'Should generate files for example: advanced-component-chaining-copies-variables' {
             {
-                $exampleProjectPath = Join-Path ( Join-Path $PROJECT_DIR 'examples' ) 'advanced-component-chaining-copies-variables'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'advanced-component-chaining-copies-variables'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
