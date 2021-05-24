@@ -1,7 +1,8 @@
 # Generate-DockerImageVariants
 
 [![github-actions](https://github.com/theohbrothers/Generate-DockerImageVariants/workflows/ci-master-pr/badge.svg)](https://github.com/theohbrothers/Generate-DockerImageVariants/actions)
-[![github-tag](https://img.shields.io/github/tag/theohbrothers/Generate-DockerImageVariants)](https://github.com/theohbrothers/Generate-DockerImageVariants/releases/)
+[![github-release](https://img.shields.io/github/v/release/theohbrothers/Generate-DockerImageVariants?style=flat-square)](https://github.com/theohbrothers/Generate-DockerImageVariants/releases/)
+[![powershell-gallery-release](https://img.shields.io/powershellgallery/v/Generate-DockerImageVariants?logo=powershell&logoColor=white&label=PSGallery&labelColor=&style=flat-square)](https://www.powershellgallery.com/packages/Generate-DockerImageVariants/)
 
 Easily generate a repository populated with Docker image variants.
 
