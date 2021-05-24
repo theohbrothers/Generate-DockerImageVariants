@@ -1,3 +1,3 @@
 @"
-foo: $( $_['variables']['foo'] )
+foo: $( $PASS_VARIABLES['foo'] )
 "@
