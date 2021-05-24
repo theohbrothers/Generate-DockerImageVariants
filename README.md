@@ -1,7 +1,7 @@
 # Generate-DockerImageVariants
 
-[![github-actions](https://github.com/leojonathanoh/Generate-DockerImageVariants/workflows/ci-master-pr/badge.svg)](https://github.com/leojonathanoh/Generate-DockerImageVariants/actions)
-[![github-tag](https://img.shields.io/github/tag/leojonathanoh/Generate-DockerImageVariants)](https://github.com/leojonathanoh/Generate-DockerImageVariants/releases/)
+[![github-actions](https://github.com/theohbrothers/Generate-DockerImageVariants/workflows/ci-master-pr/badge.svg)](https://github.com/theohbrothers/Generate-DockerImageVariants/actions)
+[![github-tag](https://img.shields.io/github/tag/theohbrothers/Generate-DockerImageVariants)](https://github.com/theohbrothers/Generate-DockerImageVariants/releases/)
 
 
 A Powershell Module to easily generate a repository populated with Docker image variants.
