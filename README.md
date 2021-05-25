@@ -170,7 +170,7 @@ Upon generation, a file `/variants/curl/Dockerfile` is generated in the `curl` v
 |       └── Dockerfile
 ```
 
-See the [`/docs/examples/basic-distro`](examples/basic-distro) example.
+See the [`/docs/examples/basic-distro`](docs/examples/basic-distro) example.
 
 ## Generation of a variant's built context file(s) through template processing
 
@@ -238,7 +238,7 @@ Then, the following variables are now available in the scope of the `<file>.ps1`
 
 During each pass, a hashtable called `$PASS_VARIABLES` will be in the scope of the processed `Dockerfile.ps1` template. For instance, in the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
 
-See the [`/docs/examples/basic-distro-variables`](examples/basic-distro-variables) example for using variables.
+See the [`/docs/examples/basic-distro-variables`](docs/examples/basic-distro-variables) example for using variables.
 
 ## Generation of a variant's built context through file copying
 
@@ -270,7 +270,7 @@ $VARIANTS = @(
 
 This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/curl` as `/variants/curl/app`.
 
-See the [`/docs/examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
+See the [`/docs/examples/advanced-component-chaining-copies-variables`](docs/examples/advanced-component-chaining-copies-variables) example.
 
 ## Advanced: Generation of a single variant's built context file(s) using Component-chaining
 
@@ -323,14 +323,14 @@ The template pass to generate the variant's build context `Dockerfile` proceeds 
 
 The file `/variants/curl-git/Dockerfile` is generated along with the variant `curl-git` build context: `/variants/curl-git`
 
-See the [`/docs/examples/basic-component-chaining`](examples/basic-component-chaining) example and the [`/docs/examples/basic-distro-component-chaining`](examples/basic-distro-component-chaining) example.
+See the [`/docs/examples/basic-component-chaining`](docs/examples/basic-component-chaining) example and the [`/docs/examples/basic-distro-component-chaining`](docs/examples/basic-distro-component-chaining) example.
 
 **Note: If the variant's `tag` consist of a word that matches the variant's `distro`, like in the above example, there will not be a component called `distro`.** For instance, in the above example, if the `tag` is `curl-git-alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component.
 
 To specify that only certain components be processed, independent of the `tag` property, ensure to define the `components` property. See these examples:
 
-- [`/docs/examples/basic-custom-components`](examples/basic-custom-components) example.
-- [`/docs/examples/basic-custom-components-distro`](examples/basic-custom-components-distro) example.
+- [`/docs/examples/basic-custom-components`](docs/examples/basic-custom-components) example.
+- [`/docs/examples/basic-custom-components-distro`](docs/examples/basic-custom-components-distro) example.
 
 ## Advanced: Generation of a multiple variants' built context file(s) using Component-chaining
 
@@ -414,12 +414,12 @@ Upon generation, **three** variants build contexts for variants `curl-git`, `cur
 |       └── Dockerfile
 ```
 
-See the [`/docs/examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
+See the [`/docs/examples/advanced-component-chaining-copies-variables`](docs/examples/advanced-component-chaining-copies-variables) example.
 
 To specify that only certain components be processed, independent of the `tag` property, ensure to define the `components` property. See these examples:
 
-- [`/docs/examples/basic-custom-components`](examples/basic-custom-components) example.
-- [`/docs/examples/basic-custom-components-distro`](examples/basic-custom-components-distro) example.
+- [`/docs/examples/basic-custom-components`](docs/examples/basic-custom-components) example.
+- [`/docs/examples/basic-custom-components-distro`](docs/examples/basic-custom-components-distro) example.
 
 ## Optional: Generate other repository files
 
@@ -458,7 +458,7 @@ Now, the generation results in two files, relative to the base of the project:
 
 The variables `$VARIANTS` will be available during the processing of the template files `/generate/templates/.gitlab-ci.yml.ps1` and `/generate/templates/README.md.ps1`.
 
-See the [`/docs/examples/advanced-component-chaining-copies-variables`](examples/advanced-component-chaining-copies-variables) example.
+See the [`/docs/examples/advanced-component-chaining-copies-variables`](docs/examples/advanced-component-chaining-copies-variables) example.
 
 ## Appendix
 
