@@ -9,7 +9,6 @@ function Generate-DockerImageVariants {
     ,
         [Parameter(ParameterSetName='Init',Position=1)]
         [Parameter(ParameterSetName='Generate',Position=0)]
-        [ValidateNotNullOrEmpty()]
         [ValidateScript({ Test-Path $_ })]
         [string]
         $ProjectPath

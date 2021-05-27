@@ -4,6 +4,18 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "Get-Definition" -Tag 'Unit' {
 
+    Context 'Parameter' {
+
+        $drive = Convert-Path 'TestDrive:\'
+
+        It 'Should throw an exception if variableName is empty' {
+            $path = $drive
+            $variableName = ''
+            { Get-Definition -Path $path -VariableName $variableName } | Should -Throw 'null'
+        }
+
+    }
+
     Context 'Behavior' {
 
         BeforeEach {

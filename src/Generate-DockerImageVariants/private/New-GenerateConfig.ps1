@@ -2,11 +2,13 @@ function New-GenerateConfig {
     [CmdletBinding()]
     param (
         [Parameter()]
-        [object]
+        [ValidateNotNullOrEmpty()]
+        [string]
         $ModulePath
     ,
         [Parameter()]
-        [object]
+        [ValidateNotNullOrEmpty()]
+        [string]
         $TargetRepositoryPath
     )
     $GenerateConfig = [ordered]@{}
