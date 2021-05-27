@@ -10,13 +10,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
     $PSDefaultParameterValues['Get-Item:Force'] = $true
 
     Context 'Parameters' {
-        It 'Outputs version' {
-            $versionRegex = 'v\d\.\d\.\d+'
-
-            $version = Generate-DockerImageVariants -Version
-
-            $version -match $versionRegex | Should -Be $true
-        }
 
         It 'Initializes the /generate directory' {
             # Mock project

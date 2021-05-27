@@ -17,13 +17,6 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
     Context 'Behavior' {
 
-        It 'Outputs version' {
-            $script:GENERATE_DOCKERIMAGEVARIANTS_VERSION = 'v0.0.0'
-
-            $version = Generate-DockerImageVariants -Version
-            $version | Should -Match '^v\d+\.\d+\.\d+$'
-        }
-
         It 'Initializes the /generate folder' {
             $projectPath = 'foo'
             Mock Test-Path -ParameterFilter { $Path -eq $projectPath } { $true }
