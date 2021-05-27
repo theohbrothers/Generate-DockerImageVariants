@@ -4,12 +4,12 @@ function Get-Definition {
         # Path to the definition file
         [Parameter()]
         [ValidateScript({ Test-Path $_ })]
-        [ValidateNotNullOrEmpty()]
         [object]
         $Path
     ,
         # Variable name to get
         [Parameter()]
+        [ValidateNotNullOrEmpty()]
         [string]
         $VariableName
     )

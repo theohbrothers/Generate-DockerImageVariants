@@ -2,6 +2,7 @@ function Get-ContextFileContent {
     [CmdletBinding()]
     param (
         [Parameter()]
+        [ValidateNotNullOrEmpty()]
         [hashtable]$Template
     ,
         [Parameter()]

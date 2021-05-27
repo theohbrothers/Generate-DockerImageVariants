@@ -2,10 +2,12 @@ function New-RepositoryVariantBuildContext {
     [CmdletBinding(DefaultParameterSetName='default')]
     param (
         [Parameter(ParameterSetName='default')]
+        [ValidateNotNullOrEmpty()]
         [object]
         $Variant
     ,
         [Parameter(ParameterSetName='pipeline',ValueFromPipeline)]
+        [ValidateNotNullOrEmpty()]
         [object]
         $InputObject
     )

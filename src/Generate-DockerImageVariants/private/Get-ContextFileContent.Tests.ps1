@@ -4,9 +4,32 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "Get-ContextFileContent" -Tag 'Unit' {
 
+    Context 'Parameters' {
+
+        It 'Should throw an exception if template is empty' {
+            $template = @{}
+
+            { Get-ContextFileContent -Template $template } | Should -Throw 'null'
+        }
+
+        It 'Should not throw an exception if templatePassVariables is empty' {
+            $template = @{
+                includeHeader = $false
+                templateDirectory = 'foo'
+                includeFooter = $false
+            }
+            $templatePassVariables = @{}
+            Mock Test-Path { $true }
+            function Get-ContentFromTemplate {}
+
+            { Get-ContextFileContent -Template $template -TemplatePassVariables $templatePassVariables } | Should -Not -Throw
+        }
+
+    }
+
     Context 'Behavior' {
 
-        function Get-ContentFromTemplate{
+        function Get-ContentFromTemplate {
             param (
                 $Path
             )

@@ -2,10 +2,12 @@ function New-RepositoryFile {
     [CmdletBinding(DefaultParameterSetName='default')]
     param (
         [Parameter(ParameterSetName='default')]
+        [ValidateNotNullOrEmpty()]
         [object]
         $File
     ,
         [Parameter(ParameterSetName='pipeline',ValueFromPipeline)]
+        [ValidateNotNullOrEmpty()]
         [object]
         $InputObject
     )
