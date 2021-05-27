@@ -13,10 +13,6 @@ function Generate-DockerImageVariants {
         [ValidateScript({ Test-Path $_ })]
         [string]
         $ProjectPath
-    ,
-        [Parameter(ParameterSetName='Version')]
-        [switch]
-        $Version
     )
     begin {
         # PS Defaults
@@ -26,10 +22,6 @@ function Generate-DockerImageVariants {
         $PSDefaultParameterValues['Out-File:Force'] = $true
     }
     process {
-        if ($PSCmdlet.ParameterSetName -eq 'Version') {
-            $script:GENERATE_DOCKERIMAGEVARIANTS_VERSION
-            return
-        }
         try {
             # Create the Config
             $GenerateConfig = New-GenerateConfig -ModulePath (Convert-Path $PSScriptRoot/..) -TargetRepositoryPath $ProjectPath
