@@ -22,10 +22,10 @@
     # TypesToProcess = @()
     # FormatsToProcess = @()
     # NestedModules = @()
-    FunctionsToExport = @()
-    CmdletsToExport = @(
-        'Generate-DockerImageVariants'
+    FunctionsToExport = @(
+        Get-ChildItem $PSScriptRoot/../../../src/Generate-DockerImageVariants/public -Exclude *.Tests.ps1 | % { $_.BaseName }
     )
+    CmdletsToExport = @()
     VariablesToExport = @()
     AliasesToExport = @()
     # DscResourcesToExport = @()
