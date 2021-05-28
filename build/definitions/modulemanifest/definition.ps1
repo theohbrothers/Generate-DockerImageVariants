@@ -6,7 +6,7 @@
     RootModule = 'Generate-DockerImageVariants.psm1'
     # ModuleVersion = ''                            # Value will be set for each publication based on the tag ref. Defaults to '0.0.0' in development environments and regular CI builds
     GUID = 'a6d67f62-ab0a-4c96-bbf1-6c7578c67b04'
-    Author = 'Generate-DockerImageVariants'
+    Author = 'The Oh Brothers'
     CompanyName = 'The Oh Brothers'
     Copyright = '(c) 2019 The Oh Brothers'
     Description = 'Easily generate a repository populated with Docker image variants.'
