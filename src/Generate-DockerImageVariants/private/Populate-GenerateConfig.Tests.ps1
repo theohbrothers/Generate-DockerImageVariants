@@ -29,8 +29,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
         }
 
         It 'Populates variant with specified distro (behind)' {
@@ -51,8 +51,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo-alpine'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be (Join-Path '/repo' ([IO.Path]::Combine('variants', 'foo-alpine')))
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo-alpine'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo-alpine'
         }
 
         It 'Populates variant with specified distro (middle)' {
@@ -73,8 +73,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo-bar'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo', 'bar'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo-alpine-bar'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be (Join-Path '/repo' ([IO.Path]::Combine('variants', 'foo-alpine-bar')))
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo-alpine-bar'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo-alpine-bar'
         }
 
         It 'Populates variant with specified distro (front)' {
@@ -95,8 +95,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'alpine-foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be (Join-Path '/repo' ([IO.Path]::Combine('variants', 'alpine-foo')))
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/alpine-foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/alpine-foo'
         }
 
         It 'Populates variant with tag_as_latest' {
@@ -116,8 +116,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
         }
 
         It 'Populates variant with specified components' {
@@ -140,8 +140,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'john', 'doe'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
         }
 
         It 'Populates variant with specified distro and components' {
@@ -166,8 +166,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'john', 'doe'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo-alpine'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be (Join-Path '/repo' ([IO.Path]::Combine('variants', 'foo-alpine')))
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo-alpine'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo-alpine'
         }
 
         It 'Populates variant definition with buildContextFiles' {
@@ -212,20 +212,20 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
 
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['common'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeHeader'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeFooter'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][0]['variables']['john'] | Should -Be 'doe'
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][0]['file'] | Should -Be '/repo/variants/foo/Dockerfile'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][0]['file'].Replace('\', '/') | Should -Be '/repo/variants/foo/Dockerfile'
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][1]['variables']['john'] | Should -Be 'doe'
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][1]['file'] | Should -Be '/repo/variants/foo/Dockerfile2'
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['templateDirectory'] | Should -Be '/repo/path/to/templates'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][1]['file'].Replace('\', '/') | Should -Be '/repo/variants/foo/Dockerfile2'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['templateDirectory'].Replace('\', '/') | Should -Be '/repo/path/to/templates'
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['subTemplates'] | Should -Be  @()
 
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0] | Should -Be '/repo/bar'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0].Replace('\', '/') | Should -Be '/repo/bar'
         }
 
         It 'Populates variant definition with shared definition' {
@@ -266,15 +266,15 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
 
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['common'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeHeader'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeFooter'] | Should -Be $true
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][0]['variables']['john'] | Should -Be 'doe'
 
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0] | Should -Be '/repo/bar'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0].Replace('\', '/') | Should -Be '/repo/bar'
         }
 
         It 'Prioritises variant definition over shared definition' {
@@ -335,15 +335,15 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             $GenerateConfigAfter['VARIANTS'][0]['tag_as_latest'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['tag_without_distro'] | Should -Be 'foo'
             $GenerateConfigAfter['VARIANTS'][0]['components'] | Should -Be 'foo'
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'] | Should -Be ([IO.Path]::Combine('variants', 'foo'))
-            $GenerateConfigAfter['VARIANTS'][0]['build_dir'] | Should -Be '/repo/variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir_rel'].Replace('\', '/') | Should -Be 'variants/foo'
+            $GenerateConfigAfter['VARIANTS'][0]['build_dir'].Replace('\', '/') | Should -Be '/repo/variants/foo'
 
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['common'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeHeader'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['includeFooter'] | Should -Be $false
             $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['templates']['Dockerfile']['passes'][0]['variables']['john'] | Should -Be ''
 
-            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0] | Should -Be '/repo/bar'
+            $GenerateConfigAfter['VARIANTS'][0]['buildContextFiles']['copies'][0].Replace('\', '/') | Should -Be '/repo/bar'
         }
 
         It 'Populates variant with files' {
@@ -357,8 +357,8 @@ Describe "Populate-GenerateConfig" -Tag 'Unit' {
             }
             $GenerateConfigAfter = Populate-GenerateConfig -GenerateConfig $GenerateConfig
 
-            $GenerateConfigAfter['FILES'][0]['file'] | Should -Be '/repo/foo'
-            $GenerateConfigAfter['FILES'][0]['templateFile'] | Should -Be '/repo/path/to/templates/foo.ps1'
+            $GenerateConfigAfter['FILES'][0]['file'].Replace('\', '/') | Should -Be '/repo/foo'
+            $GenerateConfigAfter['FILES'][0]['templateFile'].Replace('\', '/') | Should -Be '/repo/path/to/templates/foo.ps1'
         }
 
     }

@@ -46,8 +46,8 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content[0] | Should -Match "Some content from bar/foo.header.ps1"
-            $content[1] | Should -Match "Some content from bar/foo.ps1"
+            $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
+            $content[1].Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
         }
 
         It 'Returns body content (based on template)' {
@@ -58,7 +58,7 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content | Should -Match "Some content from bar/foo.ps1"
+            $content.Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
         }
 
         It 'Returns body content (based on subtemplates)' {
@@ -73,8 +73,8 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content[0] | Should -Match "Some content from bar/john/john.ps1"
-            $content[1] | Should -Match "Some content from bar/doe/doe.ps1"
+            $content[0].Replace('\', '/') | Should -Match "Some content from bar/john/john.ps1"
+            $content[1].Replace('\', '/') | Should -Match "Some content from bar/doe/doe.ps1"
         }
 
         It 'Returns footer content' {
@@ -86,8 +86,8 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content[0] | Should -Match "Some content from bar/foo.ps1"
-            $content[1] | Should -Match "Some content from bar/foo.footer.ps1"
+            $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
+            $content[1].Replace('\', '/') | Should -Match "Some content from bar/foo.footer.ps1"
         }
 
         It 'Returns header, body (based on template), and footer content' {
@@ -100,9 +100,9 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content[0] | Should -Match "Some content from bar/foo.header.ps1"
-            $content[1] | Should -Match "Some content from bar/foo.ps1"
-            $content[2] | Should -Match "Some content from bar/foo.footer.ps1"
+            $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
+            $content[1].Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
+            $content[2].Replace('\', '/') | Should -Match "Some content from bar/foo.footer.ps1"
         }
 
         It 'Returns header, body (based on subtemplates), and footer content' {
@@ -119,10 +119,10 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
             Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
-            $content[0] | Should -Match "Some content from bar/foo.header.ps1"
-            $content[1] | Should -Match "Some content from bar/john/john.ps1"
-            $content[2] | Should -Match "Some content from bar/doe/doe.ps1"
-            $content[3] | Should -Match "Some content from bar/foo.footer.ps1"
+            $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
+            $content[1].Replace('\', '/') | Should -Match "Some content from bar/john/john.ps1"
+            $content[2].Replace('\', '/') | Should -Match "Some content from bar/doe/doe.ps1"
+            $content[3].Replace('\', '/') | Should -Match "Some content from bar/foo.footer.ps1"
         }
 
     }
