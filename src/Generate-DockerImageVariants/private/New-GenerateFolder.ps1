@@ -19,7 +19,7 @@ function New-GenerationFolder {
     }
 
     # Create target repository definition files
-    Get-ChildItem $GenerateConfig['MODULE_SAMPLES_GENERATE_DEFINITIONS_DIR'] -Include '*.ps1' -Recurse | % {
+    Get-ChildItem $GenerateConfig['MODULE_SAMPLES_GENERATE_DEFINITIONS_DIR'] -Include '*.ps1' -Recurse -Force | % {
         $sourceItem = $_
         $destinationFullName = Join-Path $GenerateConfig['GENERATE_DEFINITIONS_DIR'] $sourceItem.Name
         if (Test-Path -LiteralPath $destinationFullName) {
@@ -27,13 +27,13 @@ function New-GenerationFolder {
         }else {
             "Creating definition file $destinationFullName" | Write-Host -ForegroundColor Green
             if ($item = New-Item $destinationFullName -ItemType File) {
-                Get-Content $sourceItem.FullName | Out-File $item.FullName -Encoding utf8
+                Get-Content $sourceItem.FullName -Force | Out-File $item.FullName -Encoding utf8 -Force
             }
         }
     }
 
     # Create target repository template files based on module's samples
-    Get-ChildItem $GenerateConfig['MODULE_SAMPLES_GENERATE_TEMPLATES_DIR'] -Include '*.ps1' -Recurse | % {
+    Get-ChildItem $GenerateConfig['MODULE_SAMPLES_GENERATE_TEMPLATES_DIR'] -Include '*.ps1' -Recurse -Force | % {
         $sourceItem = $_
         $destinationFullName = Join-Path $GenerateConfig['GENERATE_TEMPLATES_DIR'] $sourceItem.Name
         if (Test-Path -LiteralPath $destinationFullName) {
@@ -41,7 +41,7 @@ function New-GenerationFolder {
         }else {
             "Creating template file $destinationFullName" | Write-Host -ForegroundColor Green
             if ($item = New-Item $destinationFullName -ItemType File) {
-                Get-Content $sourceItem.FullName | Out-File $item.FullName -Encoding utf8
+                Get-Content $sourceItem.FullName -Force | Out-File $item.FullName -Encoding utf8 -Force
             }
         }
     }

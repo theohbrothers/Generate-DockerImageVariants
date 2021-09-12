@@ -43,7 +43,7 @@ function New-RepositoryVariantBuildContext {
                             Get-ContextFileContent @params
                         }
                         New-Item $pass['file'] -ItemType File -Force > $null
-                        $content | Out-File $pass['file'] -Encoding Utf8 -Force -NoNewline
+                        $content | Out-File $pass['file'] -Encoding Utf8 -Force -NoNewline -Force
                     }
                 }
             }

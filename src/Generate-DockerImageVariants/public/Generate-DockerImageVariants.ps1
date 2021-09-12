@@ -13,13 +13,6 @@ function Generate-DockerImageVariants {
         [string]
         $ProjectPath
     )
-    begin {
-        # PS Defaults
-        $PSDefaultParameterValues['Get-Content:Force'] = $true
-        $PSDefaultParameterValues['Get-Item:Force'] = $true
-        $PSDefaultParameterValues['Get-ChildItem:Force'] = $true
-        $PSDefaultParameterValues['Out-File:Force'] = $true
-    }
     process {
         try {
             # Create the Config
