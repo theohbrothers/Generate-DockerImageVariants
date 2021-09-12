@@ -24,7 +24,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath -Init
 
-            Assert-MockCalled New-GenerationFolder -Times 1
+            Assert-MockCalled New-GenerationFolder -Times 1 -Scope It
         }
 
         It 'Gets variants definitions' {
@@ -45,7 +45,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Get-Definition -Times 2
+            Assert-MockCalled Get-Definition -Times 2 -Scope It
         }
 
         It 'Gets variants and files definitions' {
@@ -66,7 +66,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Get-Definition -Times 3
+            Assert-MockCalled Get-Definition -Times 3 -Scope It
         }
 
         It 'Gets variants and files definitions' {
@@ -87,7 +87,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Get-Definition -Times 3
+            Assert-MockCalled Get-Definition -Times 3 -Scope It
         }
 
         It 'Validates variants definitions' {
@@ -108,7 +108,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Validate-Object -Times 1
+            Assert-MockCalled Validate-Object -Times 1 -Scope It
         }
 
         It 'Validates variants and files definition' {
@@ -131,7 +131,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Validate-Object -Times 2
+            Assert-MockCalled Validate-Object -Times 2 -Scope It
         }
 
         It 'Populates variants and files definition' {
@@ -152,7 +152,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled Populate-GenerateConfig -Times 1
+            Assert-MockCalled Populate-GenerateConfig -Times 1 -Scope It
         }
 
         It 'Generates target repository variant build context' {
@@ -176,7 +176,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled New-RepositoryVariantBuildContext -Times 1
+            Assert-MockCalled New-RepositoryVariantBuildContext -Times 1 -Scope It
         }
 
         It 'Generates target repository files' {
@@ -197,7 +197,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 
-            Assert-MockCalled New-RepositoryFile -Times 1
+            Assert-MockCalled New-RepositoryFile -Times 1 -Scope It
         }
 
     }

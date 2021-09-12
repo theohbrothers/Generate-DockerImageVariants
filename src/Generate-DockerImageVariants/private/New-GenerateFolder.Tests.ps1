@@ -34,9 +34,9 @@ Describe "New-GenerationFolder" -Tag 'Unit' {
 
             New-GenerationFolder -GenerateConfig $GenerateConfig 6>$null
 
-            Assert-MockCalled New-Item -Times 5
-            Assert-MockCalled Get-Content -Times 2
-            Assert-MockCalled Out-File -Times 2
+            Assert-MockCalled New-Item -Times 5 -Scope It
+            Assert-MockCalled Get-Content -Times 2 -Scope It
+            Assert-MockCalled Out-File -Times 2 -Scope It
         }
 
         It 'Does not recreate existing folders and files' {

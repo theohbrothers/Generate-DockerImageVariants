@@ -20,7 +20,7 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
             $variant | New-RepositoryVariantBuildContext 6>$null
 
-            Assert-MockCalled New-Item -Times 1
+            Assert-MockCalled New-Item -Times 1 -Scope It
 
         }
 
@@ -38,7 +38,7 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
             New-RepositoryVariantBuildContext -Variant $variant 6>$null
 
-            Assert-MockCalled New-Item -Times 1
+            Assert-MockCalled New-Item -Times 1 -Scope It
         }
 
         It "Creates files from templates" {
@@ -69,8 +69,8 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
             New-RepositoryVariantBuildContext -Variant $variant 6>$null
 
-            Assert-MockCalled New-Item -Times 1
-            Assert-MockCalled Out-File -Times 1
+            Assert-MockCalled New-Item -Times 1 -Scope It
+            Assert-MockCalled Out-File -Times 1 -Scope It
         }
 
         It "Creates files from copies" {
@@ -87,7 +87,7 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
             New-RepositoryVariantBuildContext -Variant $variant 6>$null
 
-            Assert-MockCalled Copy-Item -Times 1
+            Assert-MockCalled Copy-Item -Times 1 -Scope It
         }
 
     }
