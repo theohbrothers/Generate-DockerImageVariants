@@ -23,7 +23,7 @@ Describe "New-RepositoryFile" -Tag 'Unit' {
 
             $file | New-RepositoryFile  6>$null
 
-            Assert-MockCalled Out-File -Times 1
+            Assert-MockCalled Out-File -Times 1 -Scope It
         }
 
     }
@@ -46,7 +46,7 @@ Describe "New-RepositoryFile" -Tag 'Unit' {
 
             New-RepositoryFile -File $file 6>$null
 
-            Assert-MockCalled New-Item -Times 1
+            Assert-MockCalled New-Item -Times 1 -Scope It
         }
 
         It "Creates a file" {
@@ -64,7 +64,7 @@ Describe "New-RepositoryFile" -Tag 'Unit' {
 
             New-RepositoryFile -File $file 6>$null
 
-            Assert-MockCalled Get-ContentFromTemplate -Times 1
+            Assert-MockCalled Get-ContentFromTemplate -Times 1 -Scope It
         }
 
     }
