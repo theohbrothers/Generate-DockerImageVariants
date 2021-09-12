@@ -26,7 +26,7 @@ function New-RepositoryVariantBuildContext {
 
         if ($Variant.Contains('buildContextFiles')) {
             # Generate files from templates
-            if ( $Variant['buildContextFiles'].Contains('templates') -and $Variant['buildContextFiles']['templates'] -is [hashtable] ) {
+            if ($VARIANT['buildContextFiles'].Contains('templates')) {
                 foreach ($k in $Variant['buildContextFiles']['templates'].Keys) {
                     $template = $Variant['buildContextFiles']['templates'][$k]
                     foreach ($pass in $template['passes']) {
@@ -43,7 +43,7 @@ function New-RepositoryVariantBuildContext {
                             Get-ContextFileContent @params
                         }
                         New-Item $pass['file'] -ItemType File -Force > $null
-                        $content | Out-File $pass['file'] -Encoding Utf8 -Force -NoNewline -Force
+                        $content | Out-File $pass['file'] -Encoding Utf8 -NoNewline -Force
                     }
                 }
             }

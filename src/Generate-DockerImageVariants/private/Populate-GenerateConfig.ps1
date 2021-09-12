@@ -41,7 +41,7 @@ function Populate-GenerateConfig {
 
         if ($VARIANT.Contains('buildContextFiles')) {
             # Populate the templates object
-            if ( $VARIANT['buildContextFiles'].Contains('templates') -and $VARIANT['buildContextFiles']['templates'] -is [hashtable] ) {
+            if ($VARIANT['buildContextFiles'].Contains('templates')) {
                 foreach ($k in $VARIANT['buildContextFiles']['templates'].Keys) {
                     $VARIANT['buildContextFiles']['templates'][$k]['file'] = $k
                     # Dynamically determine the sub templates from the name of the variant. (E.g. 'foo-bar' will comprise of foo and bar variant sub templates for this template file)
