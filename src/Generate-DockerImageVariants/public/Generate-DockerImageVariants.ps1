@@ -63,7 +63,7 @@ function Generate-DockerImageVariants {
                 }
 
                 # Populate and normalize definitions
-                Populate-GenerateConfig -GenerateConfig $GenerateConfig
+                $GenerateConfig = Populate-GenerateConfig -GenerateConfig $GenerateConfig
 
                 # Generate each Docker image variant's build context files
                 & {

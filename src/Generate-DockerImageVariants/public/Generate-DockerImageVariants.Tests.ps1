@@ -11,7 +11,12 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
     function Get-VariantsPrototype {}
     function Get-FilesPrototype {}
     function Validate-Object {}
-    function Populate-GenerateConfig {}
+    function Populate-GenerateConfig {
+        param (
+            $GenerateConfig
+        )
+        $GenerateConfig
+    }
     function New-RepositoryVariantBuildContext {}
     function New-RepositoryFile {}
 
@@ -148,7 +153,12 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                 $GenerateConfig
             }
             Mock Test-Path -ParameterFilter { $Path -eq 'files.ps1' } { $true }
-            Mock Populate-GenerateConfig {}
+            Mock Populate-GenerateConfig {
+                param (
+                    $GenerateConfig
+                )
+                $GenerateConfig
+            }
 
             Generate-DockerImageVariants -ProjectPath $projectPath
 

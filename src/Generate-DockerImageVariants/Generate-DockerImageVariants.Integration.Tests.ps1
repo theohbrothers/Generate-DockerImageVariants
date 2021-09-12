@@ -1,5 +1,3 @@
-
-
 Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
     $PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
@@ -32,16 +30,16 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
             Generate-DockerImageVariants -Init -ProjectPath $testProjectDir 6>&1 > $null
 
-            $testProjectGenerateDir | Get-Item | Should -BeOfType [System.IO.DirectoryInfo]
-            $testProjectGenerateDefinitionsDir | Get-Item | Should -BeOfType [System.IO.DirectoryInfo]
-            $testProjectGenerateTemplatesDir | Get-Item | Should -BeOfType [System.IO.DirectoryInfo]
+            $testProjectGenerateDir | Get-Item -Force | Should -BeOfType [System.IO.DirectoryInfo]
+            $testProjectGenerateDefinitionsDir | Get-Item -Force | Should -BeOfType [System.IO.DirectoryInfo]
+            $testProjectGenerateTemplatesDir | Get-Item -Force| Should -BeOfType [System.IO.DirectoryInfo]
 
-            $testProjectGenerateDefinitionsFiles | Get-Item | Should -BeOfType [System.IO.FileInfo]
-            $testProjectGenerateDefinitionsVariants | Get-Item | Should -BeOfType [System.IO.FileInfo]
+            $testProjectGenerateDefinitionsFiles | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
+            $testProjectGenerateDefinitionsVariants | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
 
-            $testProjectGenerateTemplatesDockerfile | Get-Item | Should -BeOfType [System.IO.FileInfo]
-            $testProjectGenerateTemplatesReadmeMd | Get-Item | Should -BeOfType [System.IO.FileInfo]
-            $testProjectGenerateTemplatesGitlabCiYml | Get-Item | Should -BeOfType [System.IO.FileInfo]
+            $testProjectGenerateTemplatesDockerfile | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
+            $testProjectGenerateTemplatesReadmeMd | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
+            $testProjectGenerateTemplatesGitlabCiYml | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
 
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
@@ -79,6 +77,22 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating definition file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Not creating template file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 2
+
+            # Cleanup
+            Get-Item $testProjectDir | Remove-Item -Recurse -Force
+        }
+
+        It 'Should generate files for default prototypes created by -Init' {
+            # Mock project
+            $testProjectDir = "TestDrive:\test-project"
+            New-Item $testProjectDir -ItemType Directory > $null
+
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
+
+            Test-Path $testProjectDir/variants/curl/Dockerfile | Should -Be $true
+            Test-Path $testProjectDir/variants/curl-git/Dockerfile | Should -Be $true
+            Test-Path $testProjectDir/variants/my-cool-variant/Dockerfile | Should -Be $true
 
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
