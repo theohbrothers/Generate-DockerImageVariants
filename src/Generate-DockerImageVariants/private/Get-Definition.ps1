@@ -13,8 +13,20 @@ function Get-Definition {
         [string]
         $VariableName
     )
-    . $Path > $null
+    try {
+        $definition = & {
+            . $Path > $null
 
-    # Send the variable down the pipeline
-    Get-Variable -Name $VariableName -ValueOnly -ErrorAction SilentlyContinue
+            # Send the variable down the pipeline
+            Get-Variable -Name $VariableName -ValueOnly -ErrorAction Stop
+        }
+        if ($definition -is [array]) {
+            ,$definition
+        }else {
+            $definition
+        }
+    }catch {
+        Write-Error "There was an error in definition file $Path. Exception: " -ErrorAction Continue
+        throw
+    }
 }

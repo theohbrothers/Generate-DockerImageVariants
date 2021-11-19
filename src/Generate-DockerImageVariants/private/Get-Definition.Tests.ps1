@@ -21,14 +21,22 @@ Describe "Get-Definition" -Tag 'Unit' {
         BeforeEach {
             $drive = Convert-Path 'TestDrive:\'
             $definitionFile = Join-Path $drive 'foo.ps1'
-            $definitionFileContent = '$VARIANTS = @()'
-            $definitionFileContent | Out-File $definitionFile -Encoding utf8 -Force
         }
 
         It 'Returns definition variable' {
+            $definitionFileContent = '$VARIANTS = @()'
+            $definitionFileContent | Out-File $definitionFile -Encoding utf8 -Force
+
             $result = Get-Definition -Path $definitionFile -VariableName VARIANTS
 
             $result | Should -Be @()
+        }
+
+        It 'throws exception on errors in definition file' {
+            $definitionFileContent = 'zzz'
+            $definitionFileContent | Out-File $definitionFile -Encoding utf8 -Force
+
+            { Get-Definition -Path $definitionFile -VariableName VARIANTS 2>&1 } | Should -Throw 'zzz'
         }
 
     }
