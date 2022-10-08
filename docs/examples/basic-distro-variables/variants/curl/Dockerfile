@@ -1,6 +1,8 @@
 FROM alpine:3.8
-
 LABEL maintainer="bar"
+
+echo "My tag is curl"
+
 
 # Install curl
 RUN apk update \

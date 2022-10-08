@@ -97,7 +97,13 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
+        It 'Should generate files for example: advanced-component-chaining-copies-variables' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'advanced-component-chaining-copies-variables'
 
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
         It 'Should generate files for example: basic' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic'
@@ -105,15 +111,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
         }
-
-        It 'Should generate files for example: basic-distro' {
-            {
-                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro'
-
-                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
-            } | Should -Not -Throw
-        }
-
         It 'Should generate files for example: basic-component-chaining' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-component-chaining'
@@ -121,23 +118,13 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
         }
-
-        It 'Should generate files for example: basic-distro-variables' {
+        It 'Should generate files for example: basic-copies' {
             {
-                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-variables'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-copies'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
         }
-
-        It 'Should generate files for example: basic-distro-component-chaining' {
-            {
-                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-component-chaining'
-
-                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
-            } | Should -Not -Throw
-        }
-
         It 'Should generate files for example: basic-custom-components' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-custom-components'
@@ -145,7 +132,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
         }
-
         It 'Should generate files for example: basic-custom-components-distro' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-custom-components-distro'
@@ -153,10 +139,37 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
         }
-
-        It 'Should generate files for example: advanced-component-chaining-copies-variables' {
+        It 'Should generate files for example: basic-distro' {
             {
-                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'advanced-component-chaining-copies-variables'
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+        It 'Should generate files for example: basic-distro-component-chaining' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-component-chaining'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+        It 'Should generate files for example: basic-distro-variables' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-variables'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+        It 'Should generate files for example: basic-multiple-variants' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-multiple-variants'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+        It 'Should generate files for example: basic-variables' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-variables'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw
