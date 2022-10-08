@@ -9,8 +9,9 @@ $VARIANTS = @(
         # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = ''
 
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
+        # Specifies an list of components to process
+        # If unspecified, this is automatically populated based on the components in the tag
+        # If specified, the components override those specified in the tag
         # components = @( 'curl' )
 
         # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
@@ -26,8 +27,9 @@ $VARIANTS = @(
         # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         distro = ''
 
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
+        # Specifies an list of components to process
+        # If unspecified, this is automatically populated based on the components in the tag
+        # If specified, the components override those specified in the tag
         # components = @( 'curl', 'git' )
 
         # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified
@@ -43,8 +45,9 @@ $VARIANTS = @(
         # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
         # distro = ''
 
-        # Specifies an list of components to process. If undefined, the components will be determined from the tag.
-        # If unspecified, this is automatically populated
+        # Specifies an list of components to process
+        # If unspecified, this is automatically populated based on the components in the tag
+        # If specified, the components override those specified in the tag
         components = @( 'curl', 'git' )
 
         # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified

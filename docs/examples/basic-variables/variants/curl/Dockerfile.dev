@@ -1,0 +1,9 @@
+FROM alpine:3.8
+RUN echo "Value of foo is bar2"
+# Install curl
+RUN apk update \
+    && apk add --no-cache \
+        curl \
+    && rm -rf /var/cache/apk/*
+
+CMD ["crond", "-f"]

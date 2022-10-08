@@ -1,5 +1,7 @@
 FROM alpine:3.8
 
+echo "My tag is foo-curl-bar"
+
 # Install curl
 RUN apk update \
     && apk add --no-cache \
