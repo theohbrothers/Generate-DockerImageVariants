@@ -77,7 +77,7 @@ function Generate-DockerImageVariants {
                 $GenerateConfig['FILES'] | New-RepositoryFile
             }
         }catch {
-            if ($ErrorActionPreference = 'stop') {
+            if ($ErrorActionPreference -eq 'Stop') {
                 throw
             }else {
                 Write-Error -ErrorRecord $_
