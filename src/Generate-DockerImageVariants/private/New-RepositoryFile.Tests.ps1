@@ -67,6 +67,27 @@ Describe "New-RepositoryFile" -Tag 'Unit' {
             Assert-MockCalled Get-ContentFromTemplate -Times 1 -Scope It
         }
 
+        It "Does not create a file if template does not exist" {
+            $File = @{
+                file = '/path/to/foo'
+                templateFile = '/path/to/bar.ps1'
+            }
+            Mock Split-Path {
+                '/path/to'
+            }
+            Mock Test-Path { $true }
+            Mock Get-ContentFromTemplate {
+                throw 'file does not exist'
+            }
+            function Out-File {}
+            Mock Out-File {}
+
+            { New-RepositoryFile -File $file 6>$null } | Should -Throw
+
+            Assert-MockCalled Get-ContentFromTemplate -Times 1 -Scope It
+            Assert-MockCalled Out-File -Times 0 -Scope It
+        }
+
     }
 
 }
