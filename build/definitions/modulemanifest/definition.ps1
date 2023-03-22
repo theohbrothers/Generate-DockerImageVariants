@@ -30,7 +30,13 @@
     AliasesToExport = @()
     # DscResourcesToExport = @()
     # ModuleList = @()
-    # FileList = @()
+    FileList = @(
+        & {
+            Set-Location $PSScriptRoot/../../../src/Generate-DockerImageVariants/
+            Get-ChildItem  -File -Recurse -Force | Resolve-Path -Relative
+            Set-Location -
+        }
+    )
     PrivateData = @{
         # PSData = @{           # Properties within PSData will be correctly added to the manifest via Update-ModuleManifest without the PSData key. Leave the key commented out.
             Tags = @(
