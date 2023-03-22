@@ -140,10 +140,10 @@ jobs:
         MODULE_VERSION=$( echo "${REF}" | sed 's/^v*//' )
 
         # Generate the new module manifest
-        MODULE_NAME=$(basename $(pwd))
-        MODULE_VERSION=${MODULE_VERSION} pwsh -Command "build/PSModulePublisher/src/module/Generate-ModuleManifest.ps1 -DefinitionFile build/definitions/modulemanifest/definition.ps1 -Path src/$MODULE_NAME/$MODULE_NAME.psd1"
+        MODULE_VERSION=${MODULE_VERSION} pwsh -Command "build/PSModulePublisher/src/Invoke-Build.ps1"
 
         # Publish the module
+        MODULE_NAME=$(basename $(pwd))
         NUGET_API_KEY=${NUGET_API_KEY} MODULE_VERSION=${MODULE_VERSION} pwsh -Command "build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery"
 
   publish-draft-release:

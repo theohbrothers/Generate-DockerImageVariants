@@ -32,13 +32,13 @@
         {
             "label": "Build: Generate module manifest",
             "type": "shell",
-            "command": "MODULE_NAME=$(basename $(pwd)); MODULE_VERSION=${input:MODULE_VERSION} pwsh -Command \"build/PSModulePublisher/src/module/Generate-ModuleManifest.ps1 -DefinitionFile build/definitions/modulemanifest/definition.ps1 -Path src/$MODULE_NAME/$MODULE_NAME.psd1\"",
+            "command": "MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Build.ps1",
             "group": "build"
         },
         {
             "label": "Build: Test module manifest",
             "type": "shell",
-            "command": "MODULE_NAME=$(basename $(pwd)); MODULE_VERSION=${input:MODULE_VERSION} pwsh -Command \"build/PSModulePublisher/src/module/Test-ModuleManifest.ps1 -Path src/$MODULE_NAME/$MODULE_NAME.psd1\"",
+            "command": "MODULE_VERSION=${input:MODULE_VERSION} pwsh -Command \"build/PSModulePublisher/src/module/Test-ModuleManifest.ps1 -Path src/$MODULE_NAME/$MODULE_NAME.psd1\"",
             "group": "build"
         },
         {
