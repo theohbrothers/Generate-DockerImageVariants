@@ -29,6 +29,7 @@ function New-RepositoryFile {
 
         "Processing template file: $($File.templateFile)" | Write-Verbose
 
-        Get-ContentFromTemplate -Path $File.templateFile | Out-File $File.file -Encoding utf8 -NoNewline -Force
+        $content = Get-ContentFromTemplate -Path $File.templateFile -ErrorAction Stop
+        $content | Out-File $File.file -Encoding utf8 -NoNewline -Force
     }
 }
