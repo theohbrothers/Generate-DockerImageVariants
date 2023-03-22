@@ -26,7 +26,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             # Expected templates files
             $testProjectGenerateTemplatesDockerfile = Join-Path $testProjectGenerateTemplatesDir 'Dockerfile.ps1'
             $testProjectGenerateTemplatesReadmeMd =  Join-Path $testProjectGenerateTemplatesDir 'README.md.ps1'
-            $testProjectGenerateTemplatesGitlabCiYml =  Join-Path $testProjectGenerateTemplatesDir '.gitlab-ci.yml.ps1'
 
             Generate-DockerImageVariants -Init -ProjectPath $testProjectDir 6>&1 > $null
 
@@ -39,7 +38,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
             $testProjectGenerateTemplatesDockerfile | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
             $testProjectGenerateTemplatesReadmeMd | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
-            $testProjectGenerateTemplatesGitlabCiYml | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
 
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
@@ -62,7 +60,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             # Expected templates files
             $testProjectGenerateTemplatesDockerfile = Join-Path $testProjectGenerateTemplatesDir 'Dockerfile.ps1'
             $testProjectGenerateTemplatesReadmeMd =  Join-Path $testProjectGenerateTemplatesDir 'README.md.ps1'
-            $testProjectGenerateTemplatesGitlabCiYml =  Join-Path $testProjectGenerateTemplatesDir '.gitlab-ci.yml.ps1'
 
             # Create all folders, one definition file, one template file
             $testProjectGenerateDefinitionsFiles,
@@ -76,7 +73,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Not creating definition file' }).Count |Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating definition file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Not creating template file' }).Count | Should -Be 1
-            @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 2
+            @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 1
 
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force

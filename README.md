@@ -63,7 +63,6 @@ If prompted to trust the repository, hit `Y` and `enter`.
     │   │   ├── FILES.ps1
     │   │   └── VARIANTS.ps1
     │   └── templates
-    │       ├── .gitlab-ci.ps1
     │       ├── Dockerfile.ps1
     │       └── README.md.ps1
     ```
@@ -88,7 +87,6 @@ If prompted to trust the repository, hit `Y` and `enter`.
     │   │   ├── FILES.ps1
     │   │   └── VARIANTS.ps1
     │   └── templates
-    │       ├── .gitlab-ci.ps1
     │       ├── Dockerfile.ps1
     │       └── README.md.ps1
     ├── README.md
@@ -356,11 +354,10 @@ To specify that only certain components be processed, independent of the `tag` p
 
 To generate files other than variant build contexts in `/variants`, define them in `FILES.ps1`.
 
-Suppose we want to generate `.gitlab-ci.yml` and `README.md`:
+Suppose we want to generate `README.md`:
 
 ```powershell
 $FILES = @(
-    '.gitlab-ci.yml'
     'README.md'
 )
 ```
@@ -371,7 +368,6 @@ Then, create their templates in the `/generate/templates` directory:
 .
 ├── generate
 │   └── templates
-│       ├── gitlab-ci.yml.ps1   # gitlab-ci.yml template
 │       └── README.md.ps1       # README.md template
 ```
 
@@ -379,7 +375,6 @@ The generation results in two files, relative to the base of the project:
 
 ```sh
 .
-├── .gitlab-ci.yml
 └── .README.md
 ```
 
@@ -529,8 +524,6 @@ VERBOSE: Processing template file: /path/to/my-repo/generate/templates/Dockerfil
 Generating build context of variant 'my-cool-variant': /path/to/my-repo/variants/my-cool-variant
 VERBOSE: Generating build context file: /path/to/my-repo/variants/my-cool-variant/Dockerfile
 VERBOSE: Processing template file: /path/to/my-repo/generate/templates/Dockerfile.ps1
-Generating repository file: /path/to/my-repo/.gitlab-ci.yml
-VERBOSE: Processing template file: /path/to/my-repo/generate/templates/.gitlab-ci.yml.ps1
 Generating repository file: /path/to/my-repo/README.md
 VERBOSE: Processing template file: /path/to/my-repo/generate/templates/README.md.ps1
 ```
