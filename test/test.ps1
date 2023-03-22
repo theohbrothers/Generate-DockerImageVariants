@@ -3,7 +3,7 @@ param (
 )
 $MODULE_NAME = (Get-Item $PSScriptRoot/../).Name
 $MODULE_DIR = "$PSScriptRoot/../src/$MODULE_NAME"
-$MODULE_PATH = "$MODULE_DIR/$MODULE_NAME.psm1"
+$MODULE_MANIFEST = "$MODULE_DIR/$MODULE_NAME.psd1"
 
 Set-StrictMode -Version Latest
 $global:PesterDebugPreference_ShowFullErrors = $true
@@ -22,9 +22,12 @@ if ( ! $pester -or ! ($pester.Version | ? { $_ -ge $pesterMinVersion -and $_ -le
 Get-Module Pester -ListAvailable
 Import-Module Pester -MinimumVersion $pesterMinVersion -MaximumVersion $pesterMaxVersion -Force -ErrorAction Stop
 
+# Test the module manifest
+Test-ModuleManifest "$MODULE_MANIFEST" -ErrorAction Stop
+
 # Import our module
 Get-Module "$MODULE_NAME" | Remove-Module -Force
-Import-Module $MODULE_PATH -Force -ErrorAction Stop
+Import-Module $MODULE_MANIFEST -Force -ErrorAction Stop
 
 if ($Tag) {
     # Run Unit Tests
