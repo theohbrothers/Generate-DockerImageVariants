@@ -174,8 +174,8 @@ $VARIANTS = @(
     }
 }
 
-# This is a special variable that sets a common buildContextFiles definition for all variants
-# It will override their corresponding `buildContextFiles` in each $VARIANT
+# This is a optional variable that sets a common buildContextFiles for all variants
+# Individual variant buildContextsFiles takes precendence over this
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
@@ -313,7 +313,7 @@ $VARIANTS = @(
     }
 }
 
-# This is a special variable that sets a common buildContextFiles definition for all variants
+# This is a special optional variable that sets a common buildContextFiles definition for all variants
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{

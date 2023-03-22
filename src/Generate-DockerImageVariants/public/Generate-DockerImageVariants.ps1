@@ -33,17 +33,15 @@ function Generate-DockerImageVariants {
                         }
 
                     )
-
                 }
 
-                # Get variants' shared definition (mandatory)
-                if ($definition = Get-Definition -Path $GenerateConfig['GENERATE_DEFINITIONS_VARIANTS_FILE'] -VariableName 'VARIANTS_SHARED') {
-                    $GenerateConfig['VARIANTS_SHARED'] = if ( $definition -is [hashtable] ) {
-                                                            $definition
-                                                        }else {
-                                                            $GenerateConfig['VARIANTS_SHARED']
-                                                        }
-                }
+                # Get variants' shared definition (optional)
+                $definition = Get-Definition -Path $GenerateConfig['GENERATE_DEFINITIONS_VARIANTS_FILE'] -VariableName 'VARIANTS_SHARED' -Optional
+                $GenerateConfig['VARIANTS_SHARED'] = if ( $definition -is [hashtable] ) {
+                                                        $definition
+                                                    }else {
+                                                        $GenerateConfig['VARIANTS_SHARED']
+                                                    }
 
                 # Get files' definition (optional)
                 if ( Test-Path $GenerateConfig['GENERATE_DEFINITIONS_FILES_FILE'] ) {
