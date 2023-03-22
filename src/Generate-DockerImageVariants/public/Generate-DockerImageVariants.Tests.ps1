@@ -40,7 +40,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @()
                 }
                 $GenerateConfig
@@ -61,7 +61,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @()
                 }
                 $GenerateConfig
@@ -82,7 +82,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @()
                 }
                 $GenerateConfig
@@ -103,7 +103,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @()
                 }
                 $GenerateConfig
@@ -124,7 +124,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @(
                         'foo'
                     )
@@ -147,7 +147,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @( 'foo' )
                 }
                 $GenerateConfig
@@ -177,7 +177,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                             tag = 'foo'
                         }
                     )
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @()
                 }
                 $GenerateConfig
@@ -197,7 +197,7 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
                     GENERATE_DEFINITIONS_FILES_FILE = 'files.ps1'
                     VARIANTS = @()
-                    VARIANTS_SHARED = @{}
+                    # VARIANTS_SHARED = @{}
                     FILES = @( 'foo' )
                 }
                 $GenerateConfig

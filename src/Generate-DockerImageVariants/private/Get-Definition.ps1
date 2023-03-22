@@ -2,28 +2,33 @@ function Get-Definition {
     [CmdletBinding()]
     param (
         # Path to the definition file
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateScript({ Test-Path $_ })]
         [object]
         $Path
     ,
         # Variable name to get
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]
         $VariableName
+    ,
+        # Path to the definition file
+        [Parameter()]
+        [switch]
+        $Optional
     )
     try {
-        $definition = & {
+        & {
             . $Path > $null
 
             # Send the variable down the pipeline
-            Get-Variable -Name $VariableName -ValueOnly -ErrorAction Stop
-        }
-        if ($definition -is [array]) {
-            ,$definition
-        }else {
-            $definition
+            if ($Optional) {
+                $v = Get-Variable -Name $VariableName -ValueOnly -ErrorAction SilentlyContinue
+            }else {
+                $v = Get-Variable -Name $VariableName -ValueOnly -ErrorAction Stop
+            }
+            ,$v
         }
     }catch {
         Write-Error "There was an error in definition file $Path. Exception: " -ErrorAction Continue
