@@ -13,7 +13,7 @@
             "id": "MODULE_VERSION",
             "description": "MODULE_VERSION?",
             "type": "promptString",
-            "default": "",
+            "default": "0.0.0",
         },
     ],
     "tasks": [
