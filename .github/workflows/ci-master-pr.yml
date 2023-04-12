@@ -126,15 +126,18 @@ jobs:
       run: |
         pwsh -NoLogo -NonInteractive -NoProfile -Command '$PSVersionTable'
     - name: Publish (dry run)
+      shell: pwsh
+      env:
+        MODULE_VERSION: '999.0.0'
+        NUGET_API_KEY: 'xxx'
       run: |
-        set -e
+        $ErrorActionPreference = 'Stop'
+
         # Generate the new module manifest
-        MODULE_VERSION=987.0.0
-        MODULE_VERSION=${MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Build.ps1
+        $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
 
         # Publish the module
-        MODULE_NAME=$(basename $(pwd))
-        NUGET_API_KEY=xxx MODULE_VERSION=${MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery -DryRun
+        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery -DryRun
 
   publish-to-psgallery:
     needs: [test-powershell-5-1-windows-2019, test-powershell-6-0, test-powershell-6-1, test-powershell-6-2, test-powershell-7-0, test-powershell-7-1, test-powershell-7-2, test-publish-to-psgallery]
@@ -147,9 +150,8 @@ jobs:
     - name: Powershell version
       run: |
         pwsh -NoLogo -NonInteractive -NoProfile -Command '$PSVersionTable'
-    - name: Publish
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    - name: Prep
+      shell: bash
       run: |
         set -e
 
@@ -159,12 +161,21 @@ jobs:
         # Strip of 'v' prefix from tag
         MODULE_VERSION=$( echo "${REF}" | sed 's/^v*//' )
 
+        # Pass variables to next step
+        echo "MODULE_VERSION=$MODULE_VERSION" >> $GITHUB_ENV
+    - name: Publish
+      shell: pwsh
+      env:
+        MODULE_VERSION: ${{ env.MODULE_VERSION }}
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: |
+        $ErrorActionPreference = 'Stop'
+
         # Generate the new module manifest
-        MODULE_NAME=$(basename $(pwd))
-        MODULE_VERSION=${MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Build.ps1
+        $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
 
         # Publish the module
-        NUGET_API_KEY=${NUGET_API_KEY} MODULE_VERSION=${MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery
+        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery -DryRun
 
   publish-draft-release:
     needs: [publish-to-psgallery]
