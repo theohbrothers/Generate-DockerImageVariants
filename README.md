@@ -170,7 +170,7 @@ $VARIANTS = @(
     @{
         tag = 'git'
     }
-}
+)
 
 # This is a optional variable that sets a common buildContextFiles for all variants
 # Individual variant buildContextsFiles takes precendence over this
@@ -371,7 +371,7 @@ Then, create their templates in the `/generate/templates` directory:
 │       └── README.md.ps1       # README.md template
 ```
 
-The generation results in two files, relative to the base of the project:
+Upon generation, `README.md` is now generated:
 
 ```sh
 .
