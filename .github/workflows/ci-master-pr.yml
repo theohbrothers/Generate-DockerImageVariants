@@ -150,26 +150,15 @@ jobs:
     - name: Powershell version
       run: |
         pwsh -NoLogo -NonInteractive -NoProfile -Command '$PSVersionTable'
-    - name: Prep
-      shell: bash
-      run: |
-        set -e
-
-        # Get 'ref-name' from 'refs/heads/ref-name'
-        REF=$( echo "${GITHUB_REF}" | rev | cut -d '/' -f 1 | rev )
-
-        # Strip of 'v' prefix from tag
-        MODULE_VERSION=$( echo "${REF}" | sed 's/^v*//' )
-
-        # Pass variables to next step
-        echo "MODULE_VERSION=$MODULE_VERSION" >> $GITHUB_ENV
     - name: Publish
       shell: pwsh
       env:
-        MODULE_VERSION: ${{ env.MODULE_VERSION }}
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       run: |
         $ErrorActionPreference = 'Stop'
+
+        # Strip of 'v' prefix from tag
+        $env:MODULE_VERSION = $env:GITHUB_REF_NAME -replace '^v', ''
 
         # Generate the new module manifest
         $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
