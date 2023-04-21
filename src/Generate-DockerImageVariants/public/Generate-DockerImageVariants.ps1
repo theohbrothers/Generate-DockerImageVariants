@@ -23,7 +23,6 @@ function Generate-DockerImageVariants {
             }
 
             if ($PSCmdlet.ParameterSetName -eq 'Generate') {
-
                 # Get variants' definition (mandatory)
                 if ($definition = Get-Definition -Path $GenerateConfig['GENERATE_DEFINITIONS_VARIANTS_FILE'] -VariableName 'VARIANTS') {
                     # Normalize definitions
