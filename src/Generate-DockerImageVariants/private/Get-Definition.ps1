@@ -20,6 +20,7 @@ function Get-Definition {
     )
     try {
         & {
+            "Reading file: $Path" | Write-Verbose
             . $Path > $null
 
             # Send the variable down the pipeline

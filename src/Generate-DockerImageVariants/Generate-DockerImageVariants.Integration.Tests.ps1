@@ -94,7 +94,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
             Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
             Remove-Item $testProjectGenerateDefinitionsFiles
-            Generate-DockerImageVariants -ProjectPath $testProjectDir -verbose -ErrorAction Stop 6>$null
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
 
             # Cleanup
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
