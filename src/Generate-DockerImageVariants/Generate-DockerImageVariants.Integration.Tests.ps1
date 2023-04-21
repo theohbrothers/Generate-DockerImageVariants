@@ -79,6 +79,27 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
+        It 'Should treat definition file FILES.ps1 as optional' {
+            # Mock project
+            $testProjectDir = "TestDrive:\test-project"
+            New-Item $testProjectDir -ItemType Directory > $null
+
+            # Expected folders
+            $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
+            $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
+            $testProjectGenerateTemplatesDir = Join-Path $testProjectGenerateDir 'templates'
+
+            # Expected definition files
+            $testProjectGenerateDefinitionsFiles = Join-Path $testProjectGenerateDefinitionsDir 'FILES.ps1'
+
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
+            Remove-Item $testProjectGenerateDefinitionsFiles
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -verbose -ErrorAction Stop 6>$null
+
+            # Cleanup
+            Get-Item $testProjectDir | Remove-Item -Recurse -Force
+        }
+
         It 'Should generate files for default prototypes created by -Init' {
             # Mock project
             $testProjectDir = "TestDrive:\test-project"
