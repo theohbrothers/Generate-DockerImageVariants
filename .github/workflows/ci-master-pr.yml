@@ -164,7 +164,7 @@ jobs:
         $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
 
         # Publish the module
-        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery -DryRun
+        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery
 
   publish-draft-release:
     needs: [publish-to-psgallery]
