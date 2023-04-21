@@ -134,7 +134,7 @@ $VARIANTS = @(
             }
         }
     }
-}
+)
 ```
 
 The `FILES.ps1` definition file is optional, but if used, at minimum it should look like:
@@ -219,7 +219,7 @@ $VARIANTS = @(
             )
         }
     }
-}
+)
 ```
 
 This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/curl` as `/variants/curl/app`.
@@ -255,7 +255,7 @@ $VARIANTS = @(
             }
         }
     }
-}
+)
 ```
 
 During generation, in addition to the `$VARIANT` object, a `$PASS_VARIABLES` hashtable will be in the scope of the processed `Dockerfile.ps1` template. In the first pass, the value of `$PASS_VARIABLES['foo']` will be `bar`, and the file `Dockerfile` will be generated in the variant's build context. In the second pass, the value of `$PASS_VARIABLES['foo2']` will be `bar2`, and the file `Dockerfile.dev` will be generated in the same build context.
@@ -309,7 +309,7 @@ $VARIANTS = @(
     @{
         tag = 'git'
     }
-}
+)
 
 # This is a special optional variable that sets a common buildContextFiles definition for all variants
 $VARIANTS_SHARED = @{
@@ -487,7 +487,7 @@ $VARIANTS = @(
         tag = 'curl'
         distro = 'alpine'
     }
-}
+)
 ```
 
 Example of a validation trace:
