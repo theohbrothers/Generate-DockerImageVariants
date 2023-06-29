@@ -25,13 +25,7 @@ function Generate-DockerImageVariants {
             if ($PSCmdlet.ParameterSetName -eq 'Generate') {
                 # Get variants' definition (mandatory)
                 if ($definition = Get-Definition -Path $GenerateConfig['GENERATE_DEFINITIONS_VARIANTS_FILE'] -VariableName 'VARIANTS') {
-                    # Normalize definitions
-                    $GenerateConfig['VARIANTS'] = @(
-                        $definition | % {
-                            $_
-                        }
-
-                    )
+                    $GenerateConfig['VARIANTS'] = $definition
                 }
 
                 # Get variants' shared definition (optional)
@@ -45,19 +39,15 @@ function Generate-DockerImageVariants {
                 # Get files' definition (optional)
                 if ( Test-Path $GenerateConfig['GENERATE_DEFINITIONS_FILES_FILE'] ) {
                     if ($definition = Get-Definition -Path $GenerateConfig['GENERATE_DEFINITIONS_FILES_FILE'] -VariableName 'FILES') {
-                        $GenerateConfig['FILES'] = @(
-                            $definition | % { $_ }
-                        )
+                        $GenerateConfig['FILES'] = $definition
                     }
                 }
 
                 # Validate the VARIANTS and FILES defintion objects
                 "Validating `$VARIANTS definition" | Write-Verbose
                 Validate-Object -Prototype (Get-VariantsPrototype) -TargetObject $GenerateConfig['VARIANTS'] -Mandatory:$false
-                if ($GenerateConfig['FILES']) {
-                    "Validating `$FILES definition" | Write-Verbose
-                    Validate-Object -Prototype (Get-FilesPrototype) -TargetObject $GenerateConfig['FILES'] -Mandatory:$false
-                }
+                "Validating `$FILES definition" | Write-Verbose
+                Validate-Object -Prototype (Get-FilesPrototype) -TargetObject $GenerateConfig['FILES'] -Mandatory:$false
 
                 # Populate and normalize definitions
                 $GenerateConfig = Populate-GenerateConfig -GenerateConfig $GenerateConfig

@@ -170,6 +170,13 @@ Describe "Generate-DockerImageVariants" -Tag 'Unit' {
         It 'Generates target repository variant build context' {
             $projectPath = 'foo'
             Mock Test-Path -ParameterFilter { $Path -eq $projectPath } { $true }
+            Mock Get-Definition {
+                @(
+                    @{
+                        tag = 'foo'
+                    }
+                )
+            }
             Mock New-GenerateConfig  {
                 $GenerateConfig = [ordered]@{
                     GENERATE_DEFINITIONS_VARIANTS_FILE = 'variants.ps1'
