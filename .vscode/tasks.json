@@ -32,7 +32,7 @@
         {
             "label": "Build: Generate module manifest",
             "type": "shell",
-            "command": "MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Build.ps1",
+            "command": "MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Build.ps1",
             "group": "build"
         },
         {
@@ -41,7 +41,7 @@
                 "Build: Generate module manifest"
             ],
             "type": "shell",
-            "command": "MODULE_NAME=$(basename $(pwd)); NUGET_API_KEY=${input:NUGET_API_KEY} MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery -DryRun",
+            "command": "MODULE_NAME=$(basename $(pwd)); NUGET_API_KEY=${input:NUGET_API_KEY} MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery -DryRun",
             "group": "build"
         },
         {
@@ -50,7 +50,7 @@
                 "Build: Generate module manifest"
             ],
             "type": "shell",
-            "command": "MODULE_NAME=$(basename $(pwd)); NUGET_API_KEY=${input:NUGET_API_KEY} MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery",
+            "command": "MODULE_NAME=$(basename $(pwd)); NUGET_API_KEY=${input:NUGET_API_KEY} MODULE_VERSION=${input:MODULE_VERSION} pwsh build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Publish.ps1 -ModuleManifestPath src/$MODULE_NAME/$MODULE_NAME.psd1 -Repository PSGallery",
             "group": "build"
         },
 

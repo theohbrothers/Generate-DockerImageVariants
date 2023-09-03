@@ -134,10 +134,10 @@ jobs:
         $ErrorActionPreference = 'Stop'
 
         # Generate the new module manifest
-        $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
+        $moduleManifest = ./build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Build.ps1
 
         # Publish the module
-        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery -DryRun
+        ./build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery -DryRun
 
   publish-to-psgallery:
     needs: [test-powershell-5-1-windows-2019, test-powershell-6-0, test-powershell-6-1, test-powershell-6-2, test-powershell-7-0, test-powershell-7-1, test-powershell-7-2, test-publish-to-psgallery]
@@ -161,10 +161,10 @@ jobs:
         $env:MODULE_VERSION = $env:GITHUB_REF_NAME -replace '^v', ''
 
         # Generate the new module manifest
-        $moduleManifest = ./build/PSModulePublisher/src/Invoke-Build.ps1
+        $moduleManifest = ./build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Build.ps1
 
         # Publish the module
-        ./build/PSModulePublisher/src/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery
+        ./build/PSModulePublisher/src/PSModulePublisher/Public/Invoke-Publish.ps1 -ModuleManifestPath $moduleManifest -Repository PSGallery
 
   publish-draft-release:
     needs: [publish-to-psgallery]
