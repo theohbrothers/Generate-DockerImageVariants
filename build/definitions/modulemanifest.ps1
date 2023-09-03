@@ -23,7 +23,7 @@
     # FormatsToProcess = @()
     # NestedModules = @()
     FunctionsToExport = @(
-        Get-ChildItem $PSScriptRoot/../../../src/Generate-DockerImageVariants/public -Exclude *.Tests.ps1 | % { $_.BaseName }
+        Get-ChildItem $PSScriptRoot/../../src/Generate-DockerImageVariants/public -Exclude *.Tests.ps1 | % { $_.BaseName }
     )
     CmdletsToExport = @()
     VariablesToExport = @()
@@ -33,13 +33,14 @@
     # FileList = @(
     #     & {
     #         Set-Location $PSScriptRoot/../../../src/Generate-DockerImageVariants/
-    #         Get-ChildItem  -File -Recurse -Force | Resolve-Path -Relative
+    #         Get-ChildItem -File -Recurse -Force | Resolve-Path -Relative
     #         Set-Location -
     #     }
     # )
     PrivateData = @{
         # PSData = @{           # Properties within PSData will be correctly added to the manifest via Update-ModuleManifest without the PSData key. Leave the key commented out.
             Tags = @(
+                'generate-dockerimagevariants'
                 'continuous-deployment'
                 'continuous-integration'
                 'docker'
