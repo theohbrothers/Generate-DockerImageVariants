@@ -1,4 +1,4 @@
-# basic
+# basic-component-chaining
 
 ## Tags
 

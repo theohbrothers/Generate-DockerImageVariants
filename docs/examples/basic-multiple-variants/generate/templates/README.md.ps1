@@ -1,5 +1,5 @@
 @"
-# basic
+# basic-multiple-variants
 
 ## Tags
 
