@@ -4,14 +4,16 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "Populate-GenerateConfig" -Tag 'Unit' {
 
-    Context 'Behavior' {
-
+    BeforeEach {
         function New-Clone {
             param (
                 [object]$InputObject
             )
             $InputObject
         }
+    }
+
+    Context 'Behavior' {
 
         It 'Populates variant' {
             $GenerateConfig = @{

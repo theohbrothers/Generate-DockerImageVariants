@@ -4,9 +4,11 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
-    function Get-ContextFileContent {}
-    function New-Item {}
-    function Out-File {}
+    BeforeEach {
+        function Get-ContextFileContent {}
+        function New-Item {}
+        function Out-File {}
+    }
 
     Context 'Parameters' {
 

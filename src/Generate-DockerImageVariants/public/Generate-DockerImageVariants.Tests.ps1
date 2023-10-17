@@ -4,21 +4,23 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 Set-StrictMode -Version latest
 Describe "Generate-DockerImageVariants" -Tag 'Unit' {
 
-    function New-GenerateConfig {}
-    function New-GenerationFolder {}
-    function Get-Definition {}
+    BeforeEach {
+        function New-GenerateConfig {}
+        function New-GenerationFolder {}
+        function Get-Definition {}
 
-    function Get-VariantsPrototype {}
-    function Get-FilesPrototype {}
-    function Validate-Object {}
-    function Populate-GenerateConfig {
-        param (
+        function Get-VariantsPrototype {}
+        function Get-FilesPrototype {}
+        function Validate-Object {}
+        function Populate-GenerateConfig {
+            param (
+                $GenerateConfig
+            )
             $GenerateConfig
-        )
-        $GenerateConfig
+        }
+        function New-RepositoryVariantBuildContext {}
+        function New-RepositoryFile {}
     }
-    function New-RepositoryVariantBuildContext {}
-    function New-RepositoryFile {}
 
     Context 'Behavior' {
 

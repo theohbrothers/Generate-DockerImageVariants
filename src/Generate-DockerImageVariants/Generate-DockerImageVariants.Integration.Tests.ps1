@@ -1,19 +1,25 @@
 Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
-    $PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
-    $DOCS_DIR = Join-Path $PROJECT_DIR 'docs'
-    $DOCS_EXAMPLES_DIR = Join-Path $DOCS_DIR 'examples'
+    BeforeEach {
+        $PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
+        $DOCS_DIR = Join-Path $PROJECT_DIR 'docs'
+        $DOCS_EXAMPLES_DIR = Join-Path $DOCS_DIR 'examples'
 
-    $PSDefaultParameterValues['New-Item:Force'] = $true
-    $PSDefaultParameterValues['Get-Item:Force'] = $true
+        $PSDefaultParameterValues['New-Item:Force'] = $true
+        $PSDefaultParameterValues['Get-Item:Force'] = $true
+
+        # Mock project
+        $testProjectDir = "TestDrive:\test-project"
+        New-Item $testProjectDir -ItemType Directory > $null
+    }
+
+    AfterEach {
+        Get-Item $testProjectDir | Remove-Item -Recurse -Force
+    }
 
     Context 'Parameters' {
 
         It 'Initializes the /generate directory' {
-            # Mock project
-            $testProjectDir = "TestDrive:\test-project"
-            New-Item $testProjectDir -ItemType Directory > $null
-
             # Expected folders
             $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
             $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
@@ -38,16 +44,9 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
             $testProjectGenerateTemplatesDockerfile | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
             $testProjectGenerateTemplatesReadmeMd | Get-Item -Force | Should -BeOfType [System.IO.FileInfo]
-
-            # Cleanup
-            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
         It 'Does not override existing files in the /generate directory' {
-            # Mock project
-            $testProjectDir = "TestDrive:\test-project"
-            New-Item $testProjectDir -ItemType Directory > $null
-
             # Expected folders
             $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
             $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
@@ -74,16 +73,9 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating definition file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Not creating template file' }).Count | Should -Be 1
             @( $infoStream | ? { $_.MessageData.Message -cmatch '^Creating template file' }).Count | Should -Be 1
-
-            # Cleanup
-            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
         It 'Should treat definition file FILES.ps1 as optional' {
-            # Mock project
-            $testProjectDir = "TestDrive:\test-project"
-            New-Item $testProjectDir -ItemType Directory > $null
-
             # Expected folders
             $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
             $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
@@ -95,25 +87,15 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
             Remove-Item $testProjectGenerateDefinitionsFiles
             Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
-
-            # Cleanup
-            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
 
         It 'Should generate files for default prototypes created by -Init' {
-            # Mock project
-            $testProjectDir = "TestDrive:\test-project"
-            New-Item $testProjectDir -ItemType Directory > $null
-
             Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
             Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
 
             Test-Path $testProjectDir/variants/curl/Dockerfile | Should -Be $true
             Test-Path $testProjectDir/variants/curl-git/Dockerfile | Should -Be $true
             Test-Path $testProjectDir/variants/my-cool-variant/Dockerfile | Should -Be $true
-
-            # Cleanup
-            Get-Item $testProjectDir | Remove-Item -Recurse -Force
         }
         It 'Should generate files for example: advanced-component-chaining-copies-variables' {
             {

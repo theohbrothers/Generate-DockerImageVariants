@@ -4,10 +4,12 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "Get-ContentFromTemplate" -Tag 'Unit' {
 
-    $drive = Convert-Path 'TestDrive:\'
-    $templateFileContent = "12345"
-    $templateFile = Join-Path $drive 'template.ps1'
-    $templateFileContent | Out-File $templateFile -Encoding utf8 -Force
+    BeforeEach {
+        $drive = Convert-Path 'TestDrive:\'
+        $templateFileContent = "12345"
+        $templateFile = Join-Path $drive 'template.ps1'
+        $templateFileContent | Out-File $templateFile -Encoding utf8 -Force
+    }
 
     Context 'Behavior' {
 

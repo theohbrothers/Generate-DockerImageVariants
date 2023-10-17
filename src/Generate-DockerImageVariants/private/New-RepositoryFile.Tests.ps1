@@ -4,7 +4,9 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "New-RepositoryFile" -Tag 'Unit' {
 
-    function Get-ContentFromTemplate {}
+    BeforeEach {
+        function Get-ContentFromTemplate {}
+    }
 
     Context 'Parameters' {
 
