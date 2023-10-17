@@ -4,8 +4,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "New-GenerationFolder" -Tag 'Unit' {
 
-    Context 'Behavior' {
-
+    BeforeEach {
         $GenerateConfig = @{
             GENERATE_BASE_DIR = 'foo'
             GENERATE_DEFINITIONS_DIR = 'bar'
@@ -13,6 +12,9 @@ Describe "New-GenerationFolder" -Tag 'Unit' {
             MODULE_SAMPLES_GENERATE_DEFINITIONS_DIR = 'foobar'
             MODULE_SAMPLES_GENERATE_TEMPLATES_DIR = 'foobaz'
         }
+    }
+
+    Context 'Behavior' {
 
         It 'Creates folders and files' {
             Mock Test-Path { $false }

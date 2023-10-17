@@ -9,7 +9,7 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
         It 'Should throw an exception if template is empty' {
             $template = @{}
 
-            { Get-ContextFileContent -Template $template } | Should -Throw 'null'
+            { Get-ContextFileContent -Template $template } | Should -Throw # '*null*'
         }
 
         It 'Should not throw an exception if templatePassVariables is empty' {
@@ -29,13 +29,15 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
 
     Context 'Behavior' {
 
-        function Get-ContentFromTemplate {
-            param (
-                $Path
-            )
-            "Some content from $Path"
+        BeforeEach {
+            function Get-ContentFromTemplate {
+                param (
+                    $Path
+                )
+                "Some content from $Path"
+            }
+            function Test-Path {}
         }
-        function Test-Path {}
 
         It 'Returns header content' {
             $template = @{

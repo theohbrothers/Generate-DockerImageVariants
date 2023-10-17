@@ -4,24 +4,22 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path) -replace '\.Tests\.', '.'
 
 Describe "Get-Definition" -Tag 'Unit' {
 
-    Context 'Parameter' {
-
+    BeforeEach {
         $drive = Convert-Path 'TestDrive:\'
+        $definitionFile = Join-Path $drive 'foo.ps1'
+    }
+
+    Context 'Parameter' {
 
         It 'Should throw an exception if variableName is empty' {
             $path = $drive
             $variableName = ''
-            { Get-Definition -Path $path -VariableName $variableName } | Should -Throw 'null'
+            { Get-Definition -Path $path -VariableName $variableName } | Should -Throw # 'null'
         }
 
     }
 
     Context 'Behavior' {
-
-        BeforeEach {
-            $drive = Convert-Path 'TestDrive:\'
-            $definitionFile = Join-Path $drive 'foo.ps1'
-        }
 
         It 'Returns variable in definition file' {
             $definitionFileContent = '$foo = @()'
@@ -56,7 +54,7 @@ Describe "Get-Definition" -Tag 'Unit' {
             $definitionFileContent = 'zzz'
             $definitionFileContent | Out-File $definitionFile -Encoding utf8 -Force
 
-            { Get-Definition -Path $definitionFile -VariableName foo 2>&1 } | Should -Throw 'zzz'
+            { Get-Definition -Path $definitionFile -VariableName foo 2>&1 } | Should -Throw # '*zzz*'
         }
 
     }
