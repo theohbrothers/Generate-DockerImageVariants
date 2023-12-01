@@ -53,74 +53,75 @@ If prompted to trust the repository, hit `Y` and `enter`.
     cd /path/to/my-project
     ```
 
-2. Initialize the `/generate` folder
+1. Initialize the `./generate` folder
 
     ```powershell
     Import-Module Generate-DockerImageVariants
     Generate-DockerImageVariants . -Init
     ```
 
-   Definition and template files are generated in the `/generate` folder.
+   Definition and template files are generated in the `./generate` folder.
 
     ```sh
-    .
     ├── generate
     │   ├── definitions
     │   │   ├── FILES.ps1
     │   │   └── VARIANTS.ps1
+    │   ├── functions
+    │   │   └── Download-Binary.ps1
     │   └── templates
     │       ├── Dockerfile.ps1
     │       └── README.md.ps1
     ```
 
-3. Edit the definitions and template files in `/generate` (as needed)
+1. Edit the definitions and template files in `./generate` (as needed)
 
-4. Generate the variants:
+1. Generate the variants:
 
     ```powershell
     Generate-DockerImageVariants .
     ```
 
-   Build contexts of variants are generated in `/variants`.
+   Build contexts of variants are generated in `./variants`.
 
    The repository tree now looks like:
 
     ```sh
-    .
+    ├── README.md
     ├── generate
     │   ├── definitions
     │   │   ├── FILES.ps1
     │   │   └── VARIANTS.ps1
+    │   ├── functions
+    │   │   └── Download-Binary.ps1
     │   └── templates
     │       ├── Dockerfile.ps1
     │       └── README.md.ps1
-    ├── README.md
     └── variants
-        └── some-tag-of-variant
+        └── curl
             └── Dockerfile
     ```
 
-## Generation definitions and templates
+## Directory structure
 
-A single folder named `/generate` at the base of the repository will hold all the definition and template files.
-
-- `/generate/definitions` is the definitions folder containing two files `VARIANTS.ps1` and `FILES.ps1`
-- `/generate/templates` is the templates folder and create template files. E.g. `/generate/templates/Dockerfile.ps1`, `/generate/templates/README.md.ps1`
+A single folder named `./generate` at the base of the repository will hold all the definition and template files:
 
 ```sh
-.
 ├── generate
-│   ├── definitions
-│   │   ├── FILES.ps1       # An *optional* definition file for generation of repository files
-│   │   └── VARIANTS.ps1    # Variant definition file for generation of variant build context
-│   └── templates
-│       ├── Dockerfile.ps1  # Dockerfile template (shared among variants across all distros)
-│       └── README.md.ps1   # README.md template
+│   ├── definitions             # Definitions folder
+│   │   ├── FILES.ps1           # An optional definition file for generation of repository files
+│   │   └── VARIANTS.ps1        # Variant definition file for generation of variant build context
+│   ├── functions               # Functions folder (optional). Useful for Dockerfile templating
+│   │   └── Some-Function.ps1   # A function to use in your templates
+│   │   └── Another-Function.ps1   # A function to use in your templates
+│   └── templates               # Templates folder
+│       ├── Dockerfile.ps1      # Dockerfile template (shared among variants across all distros)
+│       └── README.md.ps1       # README.md template
 ```
 
 ## Generation of a variant
 
-At minimum, the `/generate/definitions/VARIANTS.ps1` definition file should contain the `$VARIANTS` definition like this:
+At minimum, the `./generate/definitions/VARIANTS.ps1` definition file should contain the `$VARIANTS` definition like this:
 
 ```powershell
 $VARIANTS = @(
@@ -151,10 +152,9 @@ $FILES = @(
 )
 ```
 
-Upon generation, a file `/variants/sometag/Dockerfile` is generated in the `sometag` variant's build context in `/variants/sometag`, as well as a file `/README.md`, both relative to the base of the project.
+Upon generation, the `sometag` variant's build context is generated in `./variants/sometag` with a file `Dockerfile`, as well as a file `./README.md`, both relative to the base of the project.
 
 ```sh
-.
 ├── README.md
 └── variants
 |   └── sometag
@@ -162,6 +162,21 @@ Upon generation, a file `/variants/sometag/Dockerfile` is generated in the `some
 ```
 
 See [this](docs/examples/basic) basic example.
+
+## Using custom functions
+
+To add a custom function, add a `.ps1` file in the `./generate/functions`. They will be dot-sourced and available in your templates. For instance, to add two functions `Some-Function` and `Another-Function`:
+
+```sh
+├── generate
+│   ├── functions               # Functions is optional. Useful for Dockerfile templating
+│   │   └── Some-Function.ps1   # A function to use in your templates
+│   │   └── Another-Function.ps1   # A function to use in your templates
+```
+
+Then simply call them in your templates.
+
+See [this](docs/examples/basic-functions) basic example with function called `Download-Binary` and `Download-Binary2`.
 
 ## Generation of multiple variants
 
@@ -178,7 +193,7 @@ $VARIANTS = @(
 )
 
 # This is a optional variable that sets a common buildContextFiles for all variants
-# Individual variant buildContextsFiles takes precendence over this
+# Individual variant buildContextsFiles overrides this
 $VARIANTS_SHARED = @{
     buildContextFiles = @{
         templates = @{
@@ -198,7 +213,6 @@ $VARIANTS_SHARED = @{
 Upon generation, the `curl` and `git` variants' build contexts are generated:
 
 ```sh
-.
 └── variants
 |   └── curl
 |       └── Dockerfile
@@ -227,7 +241,7 @@ $VARIANTS = @(
 )
 ```
 
-This will recursively copy all descending files/folders of the `/app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `/variants/curl` as `/variants/curl/app`.
+This will recursively copy all descending files/folders of the `./app` folder located relative to the *base* of the parent repository into the to-be-generated `curl` variant's build directory `./variants/curl` as `./variants/curl/app`.
 
 See [this](docs/examples/basic-copies) example.
 
@@ -295,9 +309,8 @@ $VARIANTS = @(
 
 The template pass to generate the variant's build context `Dockerfile` proceeds as such:
 
-1. The template `/generate/templates/Dockerfile.ps1` is processed
-
-2. The file `/variants/curl-git/Dockerfile` is now generated in the `curl-git` variant's build context: `/variants/curl-git`
+1. The template `./generate/templates/Dockerfile.ps1` is processed
+1. The build context: `./variants/curl-git` is generated with the file `./variants/curl-git/Dockerfile`
 
 See [this](docs/examples/basic-component-chaining) example.
 
@@ -336,7 +349,6 @@ $VARIANTS_SHARED = @{
 Upon generation, **three** variants build contexts for variants `curl-git`, `curl`, and `git` are generated:
 
 ```sh
-.
 └── variants
 |   └── curl-git
 |       └── Dockerfile
@@ -353,11 +365,13 @@ To specify that only certain components be processed, independent of the `tag` p
 - [`/docs/examples/basic-custom-components`](docs/examples/basic-custom-components) example.
 - [`/docs/examples/basic-custom-components-distro`](docs/examples/basic-custom-components-distro) example.
 
-**Note: If the variant's `tag` consist of a word that matches the variant's `distro`, `distro` will not be among the `components`.** For instance, in the above example, if the `tag` is `curl-git-alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component.
+Note if using [`distro`](#appendix):
+
+> If [`distro`](#appendix) is non-empty, and if the variant's `tag` consist of a word that matches the variant's `distro`, `distro` will not be among the `components`.** For instance, in the above example, if the `tag` is `curl-git-alpine` and the distro is `alpine`, there will still only be two components `curl` and `git`. `alpine` will not be considered a component.
 
 ## Optional: Generate other repository files
 
-To generate files other than variant build contexts in `/variants`, define them in `FILES.ps1`.
+To generate files other than variant build contexts in `./variants`, define them in `FILES.ps1`.
 
 Suppose we want to generate `README.md`:
 
@@ -367,10 +381,9 @@ $FILES = @(
 )
 ```
 
-Then, create their templates in the `/generate/templates` directory:
+Then, create their templates in the `./generate/templates` directory:
 
 ```sh
-.
 ├── generate
 │   └── templates
 │       └── README.md.ps1       # README.md template
@@ -379,7 +392,6 @@ Then, create their templates in the `/generate/templates` directory:
 Upon generation, `README.md` is now generated:
 
 ```sh
-.
 └── README.md
 ```
 
@@ -395,7 +407,7 @@ A `$VARIANT` definition will contain these properties.
 
 The `buildContextFiles` property of the `$VARIANT` object can be used to customize the template processing:
 
-- `common` - (Optional, defaults to `$false`) Specifies whether this file is shared by all distros. If value is `$true`, template has to be present in `/generate/templates/<file>.ps1`. If value is `$false`, and if a variant `distro` is defined, template has to be present in `/generate/templates/<file>/<distro>/`, or if a variant `distro` is omitted, template has to be present in `/generate/templates/<file>/<file>.ps1`.
+- `common` - (Optional, defaults to `$false`) Specifies whether this file is shared by all distros. If value is `$true`, template has to be present in `./generate/templates/<file>.ps1`. If value is `$false`, and if a variant `distro` is defined, template has to be present in `./generate/templates/<file>/<distro>/`, or if a variant `distro` is omitted, template has to be present in `./generate/templates/<file>/<file>.ps1`.
 - `includeHeader` - (Optional, defaults to `$false`) Specifies to process a template `<file>.header.ps1`. Template path determined by `common`
 - `includeFooter` - (Optional, defaults to `$false`) Specifies to process a template `<file>.footer.ps1`. Template path determined by `common`
 - `passes` - (Mandatory) An array of pass definitions that the template will undergo. Each pass will generate a single file.
@@ -410,8 +422,8 @@ $VARIANT = @{
     # When the tag contains words delimited by '-', it known as component-chaining.
     tag = 'some-cool-tag'
 
-    # Specifies a distro (optional). If you dont define a distro, templates will be sourced from /generate/templates/<file> folder
-    # In contrast, if a distro is specified, templates will be sourced from /generate/templates/<file>/<distro> folder
+    # Specifies a distro (optional). If you dont define a distro, templates will be sourced from ./generate/templates/<file> folder
+    # In contrast, if a distro is specified, templates will be sourced from ./generate/templates/<file>/<distro> folder
     distro = 'somedistro'
 
     # Specifies that this variant should be tagged ':latest'. This property will be useful in generation of content in README.md or ci files. Automatically populated as $false if unspecified

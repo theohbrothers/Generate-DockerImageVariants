@@ -6,6 +6,11 @@ function Get-ContentFromTemplate {
     ,
         [ValidateRange(1,100)]
         [int]$PrependNewLines
+    ,
+        [Parameter(ParameterSetName='default')]
+        [ValidateNotNull()]
+        [string[]]
+        $Functions
     )
 
     try {
@@ -13,7 +18,13 @@ function Get-ContentFromTemplate {
             throw "No such file: $Path"
         }
 
-        $content = & $Path
+        $content = & {
+            foreach ($f in $Functions) {
+                "Sourcing function: $f" | Write-Verbose
+                . $f
+            }
+            & $Path
+        }
         if ($PrependNewLines -gt 0) {
             $content = "$( "`n" * $PrependNewLines )$content"
         }

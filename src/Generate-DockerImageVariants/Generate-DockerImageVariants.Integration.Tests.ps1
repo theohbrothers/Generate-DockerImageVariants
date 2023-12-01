@@ -1,6 +1,9 @@
 Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
     BeforeEach {
+        Get-Module Generate-DockerImageVariants | Remove-Module
+        Import-Module $PSScriptRoot 3>$null
+
         $PROJECT_DIR = Convert-Path "$PSScriptRoot/../../"
         $DOCS_DIR = Join-Path $PROJECT_DIR 'docs'
         $DOCS_EXAMPLES_DIR = Join-Path $DOCS_DIR 'examples'
@@ -19,20 +22,22 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
 
     Context 'Parameters' {
 
-        It 'Initializes the /generate directory' {
-            # Expected folders
+        BeforeEach {
             $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
             $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
+            $testProjectGenerateFunctionsDir = Join-Path $testProjectGenerateDir 'functions'
             $testProjectGenerateTemplatesDir = Join-Path $testProjectGenerateDir 'templates'
 
-            # Expected definition files
+            # Definition files
             $testProjectGenerateDefinitionsFiles = Join-Path $testProjectGenerateDefinitionsDir 'FILES.ps1'
             $testProjectGenerateDefinitionsVariants = Join-Path $testProjectGenerateDefinitionsDir 'VARIANTS.ps1'
 
-            # Expected templates files
+            # Templates files
             $testProjectGenerateTemplatesDockerfile = Join-Path $testProjectGenerateTemplatesDir 'Dockerfile.ps1'
             $testProjectGenerateTemplatesReadmeMd =  Join-Path $testProjectGenerateTemplatesDir 'README.md.ps1'
+        }
 
+        It '-Init initializes the /generate directory' {
             Generate-DockerImageVariants -Init -ProjectPath $testProjectDir 6>&1 > $null
 
             $testProjectGenerateDir | Get-Item -Force | Should -BeOfType [System.IO.DirectoryInfo]
@@ -47,19 +52,6 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
         }
 
         It 'Does not override existing files in the /generate directory' {
-            # Expected folders
-            $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
-            $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
-            $testProjectGenerateTemplatesDir = Join-Path $testProjectGenerateDir 'templates'
-
-            # Expected definition files
-            $testProjectGenerateDefinitionsFiles = Join-Path $testProjectGenerateDefinitionsDir 'FILES.ps1'
-            $testProjectGenerateDefinitionsVariants = Join-Path $testProjectGenerateDefinitionsDir 'VARIANTS.ps1'
-
-            # Expected templates files
-            $testProjectGenerateTemplatesDockerfile = Join-Path $testProjectGenerateTemplatesDir 'Dockerfile.ps1'
-            $testProjectGenerateTemplatesReadmeMd =  Join-Path $testProjectGenerateTemplatesDir 'README.md.ps1'
-
             # Create all folders, one definition file, one template file
             $testProjectGenerateDefinitionsFiles,
             $testProjectGenerateTemplatesDockerfile | % {
@@ -76,16 +68,14 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
         }
 
         It 'Should treat definition file FILES.ps1 as optional' {
-            # Expected folders
-            $testProjectGenerateDir = Join-Path $testProjectDir 'generate'
-            $testProjectGenerateDefinitionsDir = Join-Path $testProjectGenerateDir 'definitions'
-            $testProjectGenerateTemplatesDir = Join-Path $testProjectGenerateDir 'templates'
-
-            # Expected definition files
-            $testProjectGenerateDefinitionsFiles = Join-Path $testProjectGenerateDefinitionsDir 'FILES.ps1'
-
             Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
             Remove-Item $testProjectGenerateDefinitionsFiles
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
+        }
+
+        It 'Should treat functions as optional' {
+            Generate-DockerImageVariants -ProjectPath $testProjectDir -Init -ErrorAction Stop #6>$null
+            Remove-Item $testProjectGenerateFunctionsDir -Recurse -Force
             Generate-DockerImageVariants -ProjectPath $testProjectDir -ErrorAction Stop 6>$null
         }
 
@@ -97,6 +87,7 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
             Test-Path $testProjectDir/variants/curl-git/Dockerfile | Should -Be $true
             Test-Path $testProjectDir/variants/my-cool-variant/Dockerfile | Should -Be $true
         }
+
         It 'Should generate files for example: advanced-component-chaining-copies-variables' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'advanced-component-chaining-copies-variables'
@@ -156,6 +147,13 @@ Describe 'Generate-DockerImageVariants' -Tag 'Integration' {
         It 'Should generate files for example: basic-distro-variables' {
             {
                 $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-distro-variables'
+
+                Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
+            } | Should -Not -Throw
+        }
+        It 'Should generate files for example: basic-functions' {
+            {
+                $exampleProjectPath = Join-Path $DOCS_EXAMPLES_DIR 'basic-functions'
 
                 Generate-DockerImageVariants -ProjectPath $exampleProjectPath -ErrorAction Stop 6>$null
             } | Should -Not -Throw

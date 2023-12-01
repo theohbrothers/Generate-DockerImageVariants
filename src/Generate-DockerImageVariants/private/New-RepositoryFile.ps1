@@ -6,6 +6,11 @@ function New-RepositoryFile {
         [object]
         $File
     ,
+        [Parameter()]
+        [ValidateNotNull()]
+        [string[]]
+        $Functions
+    ,
         [Parameter(ParameterSetName='pipeline',ValueFromPipeline)]
         [ValidateNotNullOrEmpty()]
         [object]
@@ -29,7 +34,7 @@ function New-RepositoryFile {
 
         "Processing template file: $($File.templateFile)" | Write-Verbose
 
-        $content = Get-ContentFromTemplate -Path $File.templateFile -ErrorAction Stop
+        $content = Get-ContentFromTemplate -Path $File.templateFile -Functions $Functions -ErrorAction Stop
         $content | Out-File $File.file -Encoding utf8 -NoNewline -Force
     }
 }

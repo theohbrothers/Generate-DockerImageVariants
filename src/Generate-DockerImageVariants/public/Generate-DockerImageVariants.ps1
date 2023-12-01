@@ -14,6 +14,7 @@ function Generate-DockerImageVariants {
         $ProjectPath
     )
     process {
+        Set-StrictMode -Version Latest
         try {
             # Create the Config
             $GenerateConfig = New-GenerateConfig -ModulePath (Convert-Path $PSScriptRoot/..) -TargetRepositoryPath $ProjectPath
@@ -43,6 +44,15 @@ function Generate-DockerImageVariants {
                     }
                 }
 
+                # Get functions (optional)
+                if ( Test-Path $GenerateConfig['GENERATE_FUNCTIONS_DIR'] -PathType Container ) {
+                    $GenerateConfig['FUNCTIONS'] = @(
+                        Get-ChildItem $GenerateConfig['GENERATE_FUNCTIONS_DIR'] -Recurse -Include '*.ps1' | % {
+                            Get-Function -Path $_.FullName
+                        }
+                    )
+                }
+
                 # Validate the VARIANTS and FILES defintion objects
                 "Validating `$VARIANTS definition" | Write-Verbose
                 Validate-Object -Prototype (Get-VariantsPrototype) -TargetObject $GenerateConfig['VARIANTS'] -Mandatory:$false
@@ -57,11 +67,11 @@ function Generate-DockerImageVariants {
                     # Make VARIANTS global variable available to the template script
                     $global:VARIANTS = $GenerateConfig['VARIANTS']
 
-                    $GenerateConfig['VARIANTS'] | New-RepositoryVariantBuildContext
+                    $GenerateConfig['VARIANTS'] | New-RepositoryVariantBuildContext -Functions $GenerateConfig['FUNCTIONS']
                 }
 
                 # Generate other repo files. E.g. README.md
-                $GenerateConfig['FILES'] | New-RepositoryFile
+                $GenerateConfig['FILES'] | New-RepositoryFile -Functions $GenerateConfig['FUNCTIONS']
             }
         }catch {
             "Ended with errors. Please review." | Write-Host -ForegroundColor Yellow
