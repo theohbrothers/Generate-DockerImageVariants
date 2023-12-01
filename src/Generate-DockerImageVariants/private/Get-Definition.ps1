@@ -32,7 +32,7 @@ function Get-Definition {
             ,$v
         }
     }catch {
-        Write-Error "There was an error in definition file $Path. Exception: " -ErrorAction Continue
+        Write-Error "There was an error in definition file $Path. Exception: $( $_.Exception.Message )" -ErrorAction Continue
         throw
     }
 }

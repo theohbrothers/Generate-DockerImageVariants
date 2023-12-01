@@ -21,6 +21,14 @@ Describe "Get-Definition" -Tag 'Unit' {
 
     Context 'Behavior' {
 
+        It 'Should throw on errors' {
+            '{' | Out-File $definitionFile -Encoding utf8 -Force -Append
+
+            {
+                Get-Definition -Path $template 2>$null
+            } | Should -Throw
+        }
+
         It 'Returns variable in definition file' {
             $definitionFileContent = '$foo = @()'
             $definitionFileContent | Out-File $definitionFile -Encoding utf8 -Force

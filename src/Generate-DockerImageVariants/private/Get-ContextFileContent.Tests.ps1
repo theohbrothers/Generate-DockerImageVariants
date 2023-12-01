@@ -30,13 +30,26 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
     Context 'Behavior' {
 
         BeforeEach {
-            function Get-ContentFromTemplate {
+            function Get-ContentFromTemplate {}
+            Mock Get-ContentFromTemplate {
                 param (
                     $Path
                 )
                 "Some content from $Path"
             }
             function Test-Path {}
+            Mock Test-Path { $true }
+        }
+
+        It 'Should throw on errors' {
+            $template = @{}
+            Mock Get-ContentFromTemplate {
+                throw "some error"
+            }
+
+            {
+                Get-ContextFileContent -Template $template 2>$null
+            } | Should -Throw
         }
 
         It 'Returns header content' {
@@ -45,7 +58,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                 templateDirectory = 'bar'
                 includeHeader = $true
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
@@ -57,7 +69,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                 file = 'foo'
                 templateDirectory = 'bar'
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content.Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
@@ -72,7 +83,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                     'doe'
                 )
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content[0].Replace('\', '/') | Should -Match "Some content from bar/john/john.ps1"
@@ -85,7 +95,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                 templateDirectory = 'bar'
                 includeFooter = $true
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.ps1"
@@ -99,7 +108,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                 includeHeader = $true
                 includeFooter = $true
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
@@ -118,7 +126,6 @@ Describe "Get-ContextFileContent" -Tag 'Unit' {
                     'doe'
                 )
             }
-            Mock Test-Path { $true }
 
             $content = Get-ContextFileContent -Template $template
             $content[0].Replace('\', '/') | Should -Match "Some content from bar/foo.header.ps1"
