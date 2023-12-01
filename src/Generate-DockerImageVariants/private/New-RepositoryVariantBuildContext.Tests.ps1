@@ -6,8 +6,21 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
 
     BeforeEach {
         function Get-ContextFileContent {}
+        Mock Get-ContextFileContent { 'some content' }
+        function Test-Path {}
+        Mock Test-Path { $false }
         function New-Item {}
-        function Out-File {}
+        Mock New-Item {}
+        function Set-Content {}
+        Mock Set-Content {
+            param (
+                [string]$Path,
+                [string]$Value
+            )
+            if ($Value -ne (Get-ContextFileContent)) {
+                throw
+            }
+        }
     }
 
     Context 'Parameters' {
@@ -17,8 +30,6 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
                 tag = 'foo'
                 build_dir = '/path/to/repo/foo'
             }
-            Mock Test-Path { $false }
-            Mock New-Item {}
 
             $variant | New-RepositoryVariantBuildContext 6>$null
 
@@ -35,8 +46,6 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
                 tag = 'foo'
                 build_dir = '/path/to/repo/foo'
             }
-            Mock Test-Path { $false }
-            Mock New-Item {}
 
             New-RepositoryVariantBuildContext -Variant $variant 6>$null
 
@@ -65,14 +74,12 @@ Describe "New-RepositoryVariantBuildContext" -Tag 'Unit' {
                 }
             }
             Mock Test-Path { $true }
-            Mock Get-ContextFileContent { 'some content' }
             Mock New-Item { $true }
-            Mock Out-File {}
 
             New-RepositoryVariantBuildContext -Variant $variant 6>$null
 
             Assert-MockCalled New-Item -Times 1 -Scope It
-            Assert-MockCalled Out-File -Times 1 -Scope It
+            Assert-MockCalled Set-Content -Times 1 -Scope It
         }
 
         It "Creates files from copies" {

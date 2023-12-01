@@ -6,6 +6,11 @@ function New-RepositoryVariantBuildContext {
         [object]
         $Variant
     ,
+        [Parameter()]
+        [ValidateNotNull()]
+        [string[]]
+        $Functions
+    ,
         [Parameter(ParameterSetName='pipeline',ValueFromPipeline)]
         [ValidateNotNullOrEmpty()]
         [object]
@@ -33,6 +38,7 @@ function New-RepositoryVariantBuildContext {
                         $params = @{
                             Template = $template
                             TemplatePassVariables = $pass['variables']
+                            Functions = $Functions
                         }
                         "Generating build context file: $( $pass['file'] )" | Write-Verbose
                         $content = & {
@@ -43,7 +49,7 @@ function New-RepositoryVariantBuildContext {
                             Get-ContextFileContent @params
                         }
                         New-Item $pass['file'] -ItemType File -Force > $null
-                        $content | Out-File $pass['file'] -Encoding Utf8 -NoNewline -Force
+                        Set-Content -Value $content -Path $pass['file'] -Encoding Utf8 -NoNewline -Force
                     }
                 }
             }

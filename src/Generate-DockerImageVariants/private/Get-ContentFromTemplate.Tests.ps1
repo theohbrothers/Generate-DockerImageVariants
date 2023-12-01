@@ -6,9 +6,17 @@ Describe "Get-ContentFromTemplate" -Tag 'Unit' {
 
     BeforeEach {
         $drive = Convert-Path 'TestDrive:\'
+
         $templateFileContent = "12345"
         $templateFile = Join-Path $drive 'template.ps1'
         $templateFileContent | Out-File $templateFile -Encoding utf8 -Force
+
+        $functionsFile = Join-Path $drive 'functions.ps1'
+        @'
+function Foo-Function {
+    'output of Foo-Function'
+}
+'@ | Out-File $functionsFile -Encoding utf8 -Force
     }
 
     Context 'Behavior' {
@@ -23,8 +31,17 @@ Describe "Get-ContentFromTemplate" -Tag 'Unit' {
 
         It 'Gets content from a template' {
             $content = Get-ContentFromTemplate -Path $templateFile
-            $content | Should -Be $templateFileContent
 
+            $content | Should -Be $templateFileContent
+        }
+
+        It 'Gets content from a template with functions' {
+            $templateFileContent = "Foo-Function"
+            $templateFileContent | Out-File $templateFile -Encoding utf8 -Force
+
+            $content = Get-ContentFromTemplate -Path $templateFile -Functions @( $functionsFile )
+
+            $content | Should -Be 'output of Foo-Function'
         }
 
         It 'Prepends newlines to content from a template' {

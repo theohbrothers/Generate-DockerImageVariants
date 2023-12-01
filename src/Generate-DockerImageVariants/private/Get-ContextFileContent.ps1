@@ -6,6 +6,11 @@ function Get-ContextFileContent {
         [hashtable]$Template
     ,
         [Parameter()]
+        [ValidateNotNull()]
+        [string[]]
+        $Functions
+    ,
+        [Parameter()]
         [hashtable]$TemplatePassVariables
     )
 
@@ -17,11 +22,13 @@ function Get-ContextFileContent {
         # Make PASS_VARIABLES global variable available to the template script
         $global:PASS_VARIABLES = if ($TemplatePassVariables) { $TemplatePassVariables } else { @{} }
 
-        $params = @{}
+        $params = @{
+            Functions = $Functions
+        }
         if ( $Template['includeHeader'] ) {
             $templateFileAbsolutePath = [IO.Path]::Combine($Template['templateDirectory'], "$( $Template['file'] ).header.ps1")
             "Processing template file: $templateFileAbsolutePath" | Write-Verbose
-            Get-ContentFromTemplate -Path $templateFileAbsolutePath
+            Get-ContentFromTemplate -Path $templateFileAbsolutePath @params
 
             # Spaces our header from body
             $params['PrependNewLines'] = 2

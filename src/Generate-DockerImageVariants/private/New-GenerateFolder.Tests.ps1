@@ -8,9 +8,11 @@ Describe "New-GenerationFolder" -Tag 'Unit' {
         $GenerateConfig = @{
             GENERATE_BASE_DIR = 'foo'
             GENERATE_DEFINITIONS_DIR = 'bar'
-            GENERATE_TEMPLATES_DIR = 'baz'
-            MODULE_SAMPLES_GENERATE_DEFINITIONS_DIR = 'foobar'
-            MODULE_SAMPLES_GENERATE_TEMPLATES_DIR = 'foobaz'
+            GENERATE_FUNCTIONS_DIR = 'bar'
+            GENERATE_TEMPLATES_DIR = 'bar'
+            MODULE_SAMPLES_GENERATE_DEFINITIONS_DIR = 'baz'
+            MODULE_SAMPLES_GENERATE_FUNCTIONS_DIR = 'baz'
+            MODULE_SAMPLES_GENERATE_TEMPLATES_DIR = 'baz'
         }
     }
 
