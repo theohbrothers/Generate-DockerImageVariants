@@ -64,6 +64,7 @@ function Generate-DockerImageVariants {
                 $GenerateConfig['FILES'] | New-RepositoryFile
             }
         }catch {
+            "Ended with errors. Please review." | Write-Host -ForegroundColor Yellow
             if ($ErrorActionPreference -eq 'Stop') {
                 throw
             }else {

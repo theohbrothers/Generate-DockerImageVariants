@@ -13,6 +13,14 @@ Describe "Get-ContentFromTemplate" -Tag 'Unit' {
 
     Context 'Behavior' {
 
+        It 'Should throw on errors' {
+            '{' | Out-File $templateFile -Encoding utf8 -Force -Append
+
+            {
+                Get-ContentFromTemplate -Path $templateFile 2>$null
+            } | Should -Throw
+        }
+
         It 'Gets content from a template' {
             $content = Get-ContentFromTemplate -Path $templateFile
             $content | Should -Be $templateFileContent
