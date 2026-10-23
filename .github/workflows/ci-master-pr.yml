@@ -11,8 +11,8 @@ on:
     - master
 
 jobs:
-  test-powershell-5-1-windows-2019:
-    runs-on: windows-2019
+  test-powershell-5-1-windows-2022:
+    runs-on: windows-2022
     steps:
     - uses: actions/checkout@v1
     - name: Powershell version
@@ -132,7 +132,7 @@ jobs:
 
   update-draft-release:
     needs:
-      - test-powershell-5-1-windows-2019
+      - test-powershell-5-1-windows-2022
       - test-powershell-6-0
       - test-powershell-6-1
       - test-powershell-6-2
@@ -186,7 +186,7 @@ jobs:
 
   publish-to-psgallery:
     needs:
-      - test-powershell-5-1-windows-2019
+      - test-powershell-5-1-windows-2022
       - test-powershell-6-0
       - test-powershell-6-1
       - test-powershell-6-2
