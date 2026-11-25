@@ -52,7 +52,8 @@ function Get-ContextFileContent {
             Get-ContentFromTemplate -Path $templateFileAbsolutePath @params
         }
     }catch {
-        Write-Error "There was an error getting content from template. Exception: $( $_.Exception.Message )" -ErrorAction Continue
+        "Error: There was an error getting content from template. Exception: $( $_.Exception.Message )" | Write-Host -ForegroundColor Yellow
+        "Stacktrace: $( $_.ScriptStackTrace )" | Write-Host -ForegroundColor Yellow
         throw
     }
 }
